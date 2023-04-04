@@ -1,6 +1,6 @@
 ---
 title: "Biomarker One Day"
-image: profile.jpg
+image: profile.png
 about:
   template: jolla
   links:

@@ -2,8 +2,8 @@ project:
   type: website
 
 website:
-  title: "Biomarker One Day"
-  description: "This is our blog in oncology"
+  title: "One Day"
+  description: "This is our blog"
   navbar:
     right:
       - text: Blog

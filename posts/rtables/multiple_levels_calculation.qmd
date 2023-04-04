@@ -1,0 +1,17 @@
+---
+title: 'rtable1'
+date: '2022-06-01'
+categories: ['R', 'rtables']
+description: 'test 1-1'
+execute: 
+  message: false
+  warning: false
+editor_options: 
+  chunk_output_type: console
+---
+
+# Heading 1
+
+rtables
+
+## the basic structrue

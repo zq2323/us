@@ -1,0 +1,316 @@
+---
+title: 'Mutiple level calculation 1'
+date: '2023-04-07'
+author: Qing Zou
+categories: ['R', 'rtables']
+description: 'Explore how to handle the mutiple calculation by rtables'
+execute:
+  message: false
+  warning: false
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r rcell3sd45}
+#| echo: false
+#| eval: true
+
+#' a pair of functions sprintf_format and format_values used for rcell
+#'
+#' @param n Unique number of events for the current category
+#' @param N Total number of events under the split column
+#' @param decimal Number of decimal to display
+#' @param type to decide if the denominator n/N(%) in the result
+#' @keywords sprintf_format
+#'
+#' @return
+sprintf_format_helper <- function(n, N, decimal = 1, type = "n(%)") {
+  showN <- NULL
+  if (type == "n/N(%)"){
+    showN <- "/%.0f"
+  }
+
+  if (n == 0) {
+    fmt <- sprintf_format(paste0("%.0f", showN))
+  } else if (n == N) {
+    # if pct == 100%, then show (100) instead of (100.0)
+    fmt <- sprintf_format(paste0("%.0f", showN, " ", "(%.0f)"))
+  } else {
+    fmt <- sprintf_format(paste0("%.0f", showN, " (%.", decimal, "f)"))
+  }
+
+  return(fmt)
+}
+
+
+#' a pair of functions sprintf_format and format_values used for rcell
+#'
+#' @param n Unique number of events for the current category
+#' @param N Total number of events under the split column
+#' @param type to decide if the denominator n/N(%) in the result
+#'
+#' @keywords format_values
+#' @example
+#' rcell(x = format_values_helper(1, 10),
+#'       format = sprintf_format_helper(1, 10))
+#'
+#' rcell(x = format_values_helper(1, 10, type = "n/N(%)"),
+#'       format = sprintf_format_helper(1, 10, type = "n/N(%)"))
+#'
+#' rcell(x = format_values_helper(10, 10),
+#'       format = sprintf_format_helper(10, 10))
+#'
+#' @return
+format_values_helper <- function(n, N, type = "n(%)") {
+  showN <- NULL
+  if (type == "n/N(%)"){
+    showN <- N
+  }
+  if (n == 0) {
+    value <- c(0, showN)
+  } else {
+    value <- c(n, showN, n / N * 100)
+  }
+
+  return(value)
+}
+
+#' Display rtables in html
+#'
+#' @param table a rtables object
+#' @param to_html export to HTML. Default TRUE
+#'
+#' @return a html table
+#' @export
+table_to_html <- function(table, to_html = TRUE) {
+  stopifnot(!is.null(table), class(table) %in% c("TableTree", "ElementaryTable"))
+
+  extra_css <- "
+  .tabwid {overflow-x: scroll; display: block;}
+  .tabwid table td p {min-width: 170px !important;}
+  .tabwid table td:first-child > p {min-width: 200px !important;}
+  .tabwid table tr:hover {background-color: #ffff99 !important;}
+  "
+  flextable::set_flextable_defaults(
+    font.family = ifelse(to_html, "Source Sans Pro", "Verdana"),
+    extra_css = extra_css
+  )
+
+  ft <- rtables::tt_to_flextable(table) %>%
+    flextable::border_remove() %>%
+    flextable::bold(bold = TRUE, part = "header") %>%
+    flextable::hline_top(part = "body") %>%
+    flextable::hline_bottom(part = "body") %>%
+    flextable::autofit()
+
+  if (to_html) {
+    flextable::htmltools_value(ft)
+  } else {
+    ft
+  }
+}
+```
+
+
+```{r cal1}
+library(rtables)
+library(formatters)
+library(dplyr)
+```
+
+
+## Multiple lelvels calculation
+
+`Multipile levels` calculation for categorical variable is the most common cases in Table, e.g. `PCSA`, `Exposure tables`.
+
+In this section, we will explore how to produce these output in `rtables`.
+
+Below is the test data:
+
+```{r cal2}
+#| echo: true
+#| eval: true
+df <- data.frame(SUBJID = c(rep('S1', 5), rep("S2", 4), rep("S3", 2)),
+                 ASEQ = c(1:5, 1:4, 1:2),
+                 GROUP = factor(c(rep('A', 5), rep("B", 4), rep('A', 2)), levels = c("A", "B")),
+                 PARAMCD = c('TEST_1', 'TEST_1', 'TEST_1', 'TEST_1', 'TEST_2', 'TEST_1', 'TEST_1', 'TEST_2', 'TEST_2', 'TEST_1', 'TEST_2'),
+                 CRIT = c('LEVEL_2_1','LEVEL_2_1', 'LEVEL_2_2', NA_character_, 'LEVEL_2_a', 'LEVEL_2_1', NA_character_, 'LEVEL_2_a', 'LEVEL_2_b', NA_character_, 'LEVEL_2_b'))
+```
+```{r cal2sd }
+#| echo: false
+#| eval: true
+#| message: FALSE
+knitr::kable(df, "html")%>%
+  kableExtra::kable_styling(font_size = 16)
+```
+
+Now, we need to take the `PARAMCD` as 1st level, and the `CRIT` as 2nd level to calculate the frequency of each `TEST`, it will be a table like PCSA.
+
+# Method 1
+
+the `rtables::analyze()` will firstly be used in this case.
+
+To use this function, the data should be transformed from `long strcture(BDS)` to `wide`.
+
+Steps:
+
+1. take action on setting up for the `missing value` and the `factor`:
+
+ - fill the missing value as `Missing_value_flag`, which will be subsequently handled in `rtables::analyze()`
+ - use function `tidyr::pivot_wider` implement the transformation, the new columns are used as the analyzed variables `vars` of `rtables::analyze()`
+ - `factor` the values by given level values, the levels is the format of output
+
+```{r cal2df}
+#| echo: true
+#| eval: true
+
+#
+df <- df %>% mutate(across(CRIT, ~ifelse(.=="" | is.na(.), "Missing_value_flag", as.character(.))))
+
+df1 <- df %>% tidyr::pivot_wider(id_cols = c("SUBJID", 'ASEQ', 'GROUP'),
+                                 names_from = "PARAMCD",values_from = "CRIT")
+
+#factor the data by mock
+fmt <- list(
+  'TEST_1' = c('LEVEL_2_1' = '1 of level 2',
+               'LEVEL_2_2' = '2 of level 2',
+               'LEVEL_2_3' = '3 of level 2'),
+  "TEST_2" = c('LEVEL_2_a' = 'a of level 2',
+              'LEVEL_2_b' = 'b of level 2',
+              'LEVEL_2_c' = 'c of level 2')
+)
+
+fmt <- purrr::map(fmt, ~append(., c("Missing_value_flag" = "Missing_value_flag")))
+
+df1 <- df1 %>%
+  mutate(across(paste0('TEST_', 1:2), ~factor(fmt[[cur_column()]][.x],
+                                              levels = c(fmt[[cur_column()]])), .names = "{.col}_fmt"))
+```
+```{r cal2g }
+#| echo: false
+#| eval: true
+#| message: FALSE
+knitr::kable(df1, "html")%>%
+  kableExtra::kable_styling(font_size = 16)
+```
+
+2. The dataframe `df1` is ready for output. now, the `layout` and `key values` of table will be built in the `rtables::analyze()`.
+
+ - the header and overall column are generated by  `split_cols_by` and `add_overall_col`
+ - in the `rtables::analyze()`:
+   - `vars` and `var_labels` are the variable names and labels
+   - in the `afun`, we create an analysis function, in which the arguments `df`, `.N_col`, `.var`, `.N_row` are created by rtables itself. the other aruments are customized will be passed by `extral_args`
+     - the `df` is current available(`non NA`) data with splited group, that's why we firstly fill the missing data `Missing_value_flag`. By filling
+       a non-NA value, we can handle the missing value as users expected.
+     - you will see the customized arguments `missing_rm` and `missing_label`, if user hope hide or remove the missing values.
+     - the `n_unique_keys` and `N_unique_keys` indicate that when counting the number of n/N, which records should be used.
+     - `add_Number` means whether add an row `Number: N`
+     - All the values of these customized arguments are passed by the `extra_args`, it's the greatest way to add the flexiabiliy for the tabulation.
+
+```{r cal2as}
+#| echo: true
+#| eval: true
+
+lyt <- basic_table() %>%
+  split_cols_by("GROUP") %>%
+  add_overall_col("All") %>%
+  rtables::analyze(vars = c('TEST_1_fmt', 'TEST_2_fmt'),
+                   var_labels = c('This is test 1', 'This is test 2'),
+                   afun = function(df, .N_col, .var, .N_row,
+                                  format = 'n(%)',
+                                  decimal = 1,
+                                  n_unique_keys = NULL,
+                                  N_unique_keys = NULL,
+                                  show_N_item = FALSE,
+                                  add_Number = FALSE,
+                                  missing_rm = TRUE,
+                                  missing_label =NULL,
+                                  ...) {
+
+                    if(missing_rm){
+                      df <- df %>% filter(!(!!as.name(.var) %in% "Missing_value_flag"))
+                    }
+
+                    df_n <- df
+                    if(!is.null(n_unique_keys)){
+                      df_n <- df %>% distinct(across(c(n_unique_keys, .var)), .keep_all = TRUE)
+                    }
+
+                    x <- df_n[[.var]]
+
+                    if(!is.null(N_unique_keys)){
+                      cus_N_col <- df %>% distinct(across(N_unique_keys)) %>% nrow()
+                    }else{
+                      cus_N_col <- .N_col
+                    }
+
+                    lst_body <- lapply(
+                      as.list(table(x)),
+                      function(xi) {
+                        rcell(format_values_helper(xi, cus_N_col, type = format),
+                              format = sprintf_format_helper(xi, cus_N_col, 1, type = format),
+                              indent_mod = 1L
+                        )
+                      }
+                    )
+
+                    if(is.null(missing_label)){
+                      if("Missing_value_flag" %in% names(lst_body)){
+                        lst_body <- purrr::list_modify(lst_body, "Missing_value_flag" = NULL)
+                      }
+                    }else{
+                      lst_body <- lst_body %>%
+                        setNames(gsub("Missing_value_flag", missing_label, names(.)))
+
+                    }
+
+                    if(add_Number){
+                      lst_body <- append(setNames(list(rcell(cus_N_col,
+                                                            format = "xx",
+                                                            indent_mod = 1L)),
+                                                  'Number'), lst_body)
+                    }
+                    in_rows(
+                      .list = c(
+                        lst_body,
+                        # add empty row, in .list obj
+                        " " = rcell("", format = "xx")
+                      )
+                    )
+                  },
+          extra_args = list(format = 'n/N(%)',
+                            n_unique_keys = c("SUBJID"),
+                            N_unique_keys = c("SUBJID"),
+                            add_Number = FALSE,
+                            missing_rm = FALSE,
+                            missing_label = NULL)
+          # ,
+          # show_labels = "hidden"
+  )
+```
+3. finally, fit the `layout` and `df1` into the `rtables::build_table`
+
+```{r cal2ad}
+#| echo: true
+#| eval: true
+col_counts_df <- df1 %>%
+  distinct(SUBJID, GROUP)
+col_counts <- table(col_counts_df$GROUP)
+col_counts <- c(col_counts, sum(col_counts))
+
+tbl <- lyt %>% rtables::build_table(df1, col_counts = col_counts)
+```
+
+```{r cap1}
+#| echo: false
+#| eval: true
+my_caption <- ''
+```
+
+```{r}
+#| echo: false
+#| eval: true
+#| message: FALSE
+table_to_html(tbl, to_html = FALSE)
+```

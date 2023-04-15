@@ -58,7 +58,7 @@ jobs:
             git config --global user.email 782903342@qq.com
             git config --global user.name zq2323
             git add _site
-            git commit -m "update" -a
+            git commit -m "update the _site" -a
             
       - name: Push changes
         run: |

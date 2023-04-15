@@ -39,7 +39,7 @@ jobs:
             Rscript -e "packageVersion('rsconnect')"
       - name: Install rsconnect
         run: |
-            Rscript -e 'install.packages(c("dplyr", "rtables", "haven", "assertive", "jsonlite", "yaml", "data.table", "stringr"))'
+            Rscript -e 'install.packages(c("dplyr", "rtables", "haven", "assertive", "jsonlite", "yaml", "data.table", "stringr", "rmarkdown"))'
             Rscript -e "packageVersion('rtables')"
 
       - uses: quarto-dev/quarto-actions/install-quarto@v1

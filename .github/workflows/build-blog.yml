@@ -39,7 +39,8 @@ jobs:
             Rscript -e "packageVersion('rsconnect')"
       - name: Install r packages
         run: |
-            Rscript -e 'install.packages(c("dplyr", "tidyr", "purrr","rtables", "haven", "flextable","assertive", "jsonlite", "yaml", "data.table", "stringr", "rmarkdown", "knitr", "kableExtra"))'
+            Rscript -e 'install.packages(c("dplyr", "tidyr", "devtools","purrr","rtables", "haven", "flextable","assertive", "jsonlite", "yaml", "data.table", "stringr", "rmarkdown", "knitr", "kableExtra"))'
+            Rscript -e 'devtools::install_github("brentscott93/pagecryptr")'
             Rscript -e "packageVersion('rtables')"
 
       - uses: quarto-dev/quarto-actions/install-quarto@v1

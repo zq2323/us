@@ -1,0 +1,236 @@
+---
+title: 'Customize the format of rcell'
+date: '2023-04-06'
+author: Qing Zou
+categories: ['R', 'rtables']
+description: 'Construct a cell value and associate formatting'
+execute:
+  message: false
+  warning: false
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r rcell0}
+library(rtables)
+library(formatters)
+```
+
+## rcell
+
+__Description__
+
+Construct a cell value and associate formatting, labeling, indenting, and column spanning information with it.
+
+__Usage__
+
+```{r rcell1}
+#| echo: true
+#| eval: false
+rcell(
+x,
+format = NULL,
+colspan = 1L,
+rcell 103
+label = NULL,
+indent_mod = NULL,
+footnotes = NULL,
+align = NULL,
+format_na_str = NULL
+)
+```
+
+__Arguments__
+
+  |
+ -|:--
+ __x__| ANY. Cell value
+ __format__| if FUN does not return a formatted rcell then the format is applied
+ __...__|  further arguments passed to rcell
+
+### Real case
+
+If we have a calculation `1/4*100`, the result `25` and the decimal is `2`.
+the avaiable format in rtables is `xx.xx`
+
+```{r rcell2}
+#| echo: true
+#| eval: true
+rcell(
+  x = 25,
+  format = 'xx.xx'
+)
+```
+
+What if we want a format like `1 (25.00)`? how can we customize the format in rcell as expected?
+Let's go through the function of `sprintf` firstly. the `sprintf` can returns a character vector containing a formatted combination of text and variable values.
+
+
+1. print the `25` to `25.00`
+
+```{r rcell3}
+#| echo: true
+#| eval: true
+sprintf("%.2f", 25)
+```
+For the given format, `%`: it's like a place holder for the passed value, `f`: Double precision value, see more on [sprintf](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/sprintf)
+
+
+2. update the format and passed value
+
+```{r rcell4}
+#| echo: true
+#| eval: true
+sprintf("%.0f %.2f", 1, 25)
+```
+
+```{r rcell5}
+#| echo: true
+#| eval: true
+sprintf("%.0f (%.2f)", 1, 25)
+```
+
+---
+
+In order to apply this format on other values, can we separate the formatting `%.0f (%.2f)` and the passed value `1` and `25`?
+
+there are two functions from package `formatters`
+
+`sprintf_format`: Specify text format
+
+`format_value`: Converts a value into a string using the format information
+
+```{r rcell6}
+#| echo: true
+#| eval: true
+fmtfun <- formatters::sprintf_format("%.0f (%.2f)")
+
+format_value(x = c(1, 25),
+             format = fmtfun)
+```
+
+As for the `rcell` and  its argument `x` and `format`, we can think it is a wrapper around the `format_value`
+
+```{r rcell7}
+#| echo: true
+#| eval: true
+rcell(
+  x = c(1, 25),
+  format = formatters::sprintf_format("%.0f (%.2f)")
+)
+```
+
+Then, we can also easily customize the result of `1/4*100` as `1/4 (25.00)`
+
+```{r rcell8}
+#| echo: true
+#| eval: true
+rcell(
+  x = c(1, 4, 25),
+  format = formatters::sprintf_format("%.0f/%.0f (%.2f)")
+)
+```
+
+### Create format helper function
+
+we can further more wrap this pair of funcions into two helper function for better usage.
+
+```{r rcell9}
+#| echo: true
+#| eval: true
+
+#' a pair of functions sprintf_format and format_values used for rcell
+#'
+#' @param n Unique number of events for the current category
+#' @param N Total number of events under the split column
+#' @param decimal Number of decimal to display
+#' @param type to decide if the denominator n/N(%) in the result
+#' @keywords sprintf_format
+#'
+#' @return
+sprintf_format_helper <- function(n, N, decimal = 1, type = "n(%)") {
+  showN <- NULL
+  if (type == "n/N(%)"){
+    showN <- "/%.0f"
+  }
+
+  if (n == 0) {
+    fmt <- sprintf_format(paste0("%.0f", showN))
+  } else if (n == N) {
+    # if pct == 100%, then show (100) instead of (100.0)
+    fmt <- sprintf_format(paste0("%.0f", showN, " ", "(%.0f)"))
+  } else {
+    fmt <- sprintf_format(paste0("%.0f", showN, " (%.", decimal, "f)"))
+  }
+
+  return(fmt)
+}
+
+
+#' a pair of functions sprintf_format and format_values used for rcell
+#'
+#' @param n Unique number of events for the current category
+#' @param N Total number of events under the split column
+#' @param type to decide if the denominator n/N(%) in the result
+#'
+#' @keywords format_values
+#' @example
+#' rcell(x = format_values_helper(1, 10),
+#'       format = sprintf_format_helper(1, 10))
+#'
+#' rcell(x = format_values_helper(1, 10, type = "n/N(%)"),
+#'       format = sprintf_format_helper(1, 10, type = "n/N(%)"))
+#'
+#' rcell(x = format_values_helper(10, 10),
+#'       format = sprintf_format_helper(10, 10))
+#'
+#' @return
+format_values_helper <- function(n, N, type = "n(%)") {
+  showN <- NULL
+  if (type == "n/N(%)"){
+    showN <- N
+  }
+  if (n == 0) {
+    value <- c(0, showN)
+  } else {
+    value <- c(n, showN, n / N * 100)
+  }
+
+  return(value)
+}
+```
+
+then, we can apply various formatter during printing values in `rcell`.
+
+```{r rcell10}
+#| echo: true
+#| eval: true
+rcell(x = format_values_helper(1, 10),
+      format = sprintf_format_helper(1, 10))
+```
+
+```{r rcell11}
+#| echo: true
+#| eval: true
+
+rcell(x = format_values_helper(1, 10, type = "n/N(%)"),
+      format = sprintf_format_helper(1, 10, type = "n/N(%)"))
+
+```
+
+```{r rcell12}
+#| echo: true
+#| eval: true
+
+rcell(x = format_values_helper(10, 10),
+      format = sprintf_format_helper(10, 10))
+```
+
+```{r rcell13}
+#| echo: true
+#| eval: true
+
+rcell(x = format_values_helper(0, 10, type = "n/N(%)"),
+      format = sprintf_format_helper(0, 10, type = "n/N(%)"))
+```

@@ -30,7 +30,7 @@ test_data <- data.frame(num_var1_1 = c(1, 4),
 ```
 
 what we want to do is to add two new columns: the new column equal to the sum of `num_var_x` and `denom1_y`.
-Just fit the data into the function `sum`
+Just fit the data into the function `sum_c`
 
 ```{r rcell116}
 #| echo: true
@@ -53,7 +53,7 @@ knitr::kable(test_data1, "html")%>%
   kableExtra::kable_styling(font_size = 16)
 ```
 
-the code seems not readable.
+the code seems repetitive and not readable.
 
 
 
@@ -90,6 +90,7 @@ __Arguments__
 - `NULL`: the default value, returns the selected columns in a data frame without applying a transformation. This is useful for when you want to use a function that takes a data frame.
 
 Within these functions you can use `cur_column()` and `cur_group()` to access the current column and grouping keys respectively.
+
  __.names__|  A glue specification that describes how to name the output columns. This can use `{.col}` to stand for the selected column name, and `{.fn}` to stand for the name of the function being applied. The default `NULL` is equivalent to `{.col}` for the single function case and `{.col}_{.fn}` for the case where a list is used for .fns.
 
 ### Method 1

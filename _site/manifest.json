@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "locale": "C",
+  "platform": "4.2.3",
+  "metadata": {
+    "appmode": "static",
+    "primary_rmd": null,
+    "primary_html": "index.html",
+    "content_category": "site",
+    "has_parameters": false
+  },
+  "packages": null,
+  "files": {
+    "archive.html": {
+      "checksum": "9ee2f8327cef2b561053922eb9f9b8dd"
+    },
+    "blog.html": {
+      "checksum": "27b26c6b8f40c733144570c3c2212bd3"
+    },
+    "index.html": {
+      "checksum": "341c2d9d515089fc20063aa1173c2dd0"
+    },
+    "listings.json": {
+      "checksum": "51b95cbb6b1b23c673c63286fbd1d5b2"
+    },
+    "manipulate-series.html": {
+      "checksum": "ead132c23f72b68b126d564649c254f3"
+    },
+    "posts/manipulate/dplyr_cross.html": {
+      "checksum": "245db54e4afe5f0a7e00dbf829063caa"
+    },
+    "posts/rtables/customize_cell.html": {
+      "checksum": "3a86c6f2112a04a51a5cf47aeb0e857d"
+    },
+    "posts/rtables/multiple_levels_calculation_1.html": {
+      "checksum": "a6078a225c0ecf688d4bf763c469449a"
+    },
+    "posts/rtables/multiple_levels_calculation_2.html": {
+      "checksum": "74bc306485067e3758ea7e30b68de2b1"
+    },
+    "posts/rtables/multiple_levels_calculation_3.html": {
+      "checksum": "578ae7a8afa6e02bb893f404db43e792"
+    },
+    "posts/rtables/multiple_levels_calculation_4.html": {
+      "checksum": "96f221725778354f3b840b945ba2475f"
+    },
+    "profile.png": {
+      "checksum": "edefb3a5c40f6ba85e3acca0c44a1757"
+    },
+    "rtables-series.html": {
+      "checksum": "97102ea21dede86a7072f8fbfdda0a0a"
+    },
+    "search.json": {
+      "checksum": "c9fdc2f3fd38d5be23e024c52c3d7215"
+    },
+    "site_libs/bootstrap/bootstrap-icons.css": {
+      "checksum": "3104c106b6c22560ae274d7c56f116c5"
+    },
+    "site_libs/bootstrap/bootstrap-icons.woff": {
+      "checksum": "e4cc83ddcec34db65724eb56c5230b4c"
+    },
+    "site_libs/bootstrap/bootstrap.min.css": {
+      "checksum": "583bc21c529e10e84e0a73c2cc2bcd84"
+    },
+    "site_libs/bootstrap/bootstrap.min.js": {
+      "checksum": "7ccd9d390d31af98110f74f842ea9b32"
+    },
+    "site_libs/clipboard/clipboard.min.js": {
+      "checksum": "ad98572d415d2f2452845a6068a913c0"
+    },
+    "site_libs/kePrint-0.0.1/kePrint.js": {
+      "checksum": "03b791fcaee0a40c261c3c14f3d85d27"
+    },
+    "site_libs/lightable-0.0.1/lightable.css": {
+      "checksum": "25547ce4d44910ea8f377212d34397fa"
+    },
+    "site_libs/quarto-html/anchor.min.js": {
+      "checksum": "a58f4bdbf86e8ae057af9131b5b1bcfd"
+    },
+    "site_libs/quarto-html/popper.min.js": {
+      "checksum": "ad6c106f3ba17d5a54d8053a4c4899ca"
+    },
+    "site_libs/quarto-html/quarto-syntax-highlighting.css": {
+      "checksum": "099cd394577c915952e100d918f76f84"
+    },
+    "site_libs/quarto-html/quarto.js": {
+      "checksum": "6c59bad421c4db5cafa70cd49864a5d1"
+    },
+    "site_libs/quarto-html/tippy.css": {
+      "checksum": "ebd6f8ce46a677e1a4f5f8a8317109a9"
+    },
+    "site_libs/quarto-html/tippy.umd.min.js": {
+      "checksum": "d828775275749701b48bd9d958814111"
+    },
+    "site_libs/quarto-listing/list.min.js": {
+      "checksum": "d1cdff6a106c934639d63f03f0e781ef"
+    },
+    "site_libs/quarto-listing/quarto-listing.js": {
+      "checksum": "77cf2d966f525295f151063bfdc627a7"
+    },
+    "site_libs/quarto-nav/headroom.min.js": {
+      "checksum": "ace0360e576db9b6e7df48ac68ddbbf4"
+    },
+    "site_libs/quarto-nav/quarto-nav.js": {
+      "checksum": "0f7d710426f3495cdd22a383bc736bc4"
+    },
+    "site_libs/quarto-search/autocomplete.umd.js": {
+      "checksum": "3858589005e436253c69241a1b487206"
+    },
+    "site_libs/quarto-search/fuse.min.js": {
+      "checksum": "3f6cc2902306abd1b5fb5c61655792ff"
+    },
+    "site_libs/quarto-search/quarto-search.js": {
+      "checksum": "60cb4aa6ba265db59c754011df275b22"
+    },
+    "site_libs/tabwid-1.1.3/tabwid.css": {
+      "checksum": "d437ce2bfe7051efe499172acb799f29"
+    },
+    "site_libs/tabwid-1.1.3/tabwid.js": {
+      "checksum": "fb56f94a8d449952c71f7403d7d97afe"
+    },
+    "styles.css": {
+      "checksum": "e31c3cdea03dfab8a29456978017bd10"
+    }
+  },
+  "users": null
+}

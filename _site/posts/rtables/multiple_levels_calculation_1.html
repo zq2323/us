@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Qing Zou">
+<meta name="dcterms.date" content="2023-04-07">
+<meta name="description" content="Explore how to handle the mutiple calculation by rtables">
+
+<title>One Day - Mutiple level calculation 1</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<link href="../../site_libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
+<script src="../../site_libs/tabwid-1.1.3/tabwid.js"></script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">One Day</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/zq2323/us"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Mutiple level calculation 1</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">R</div>
+    <div class="quarto-category">rtables</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Explore how to handle the mutiple calculation by rtables
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Qing Zou </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 7, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(formatters)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="multiple-lelvels-calculation" class="level2">
+<h2 class="anchored" data-anchor-id="multiple-lelvels-calculation">Multiple lelvels calculation</h2>
+<p><code>Multipile levels</code> calculation for categorical variable is the most common cases in Table, e.g.&nbsp;<code>PCSA</code>, <code>Exposure tables</code>.</p>
+<p>In this section, we will explore how to produce these output in <code>rtables</code>.</p>
+<p>Below is the test data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">SUBJID =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">'S1'</span>, <span class="dv">5</span>), <span class="fu">rep</span>(<span class="st">"S2"</span>, <span class="dv">4</span>), <span class="fu">rep</span>(<span class="st">"S3"</span>, <span class="dv">2</span>)),</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ASEQ =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">GROUP =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">'A'</span>, <span class="dv">5</span>), <span class="fu">rep</span>(<span class="st">"B"</span>, <span class="dv">4</span>), <span class="fu">rep</span>(<span class="st">'A'</span>, <span class="dv">2</span>)), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>)),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">PARAMCD =</span> <span class="fu">c</span>(<span class="st">'TEST_1'</span>, <span class="st">'TEST_1'</span>, <span class="st">'TEST_1'</span>, <span class="st">'TEST_1'</span>, <span class="st">'TEST_2'</span>, <span class="st">'TEST_1'</span>, <span class="st">'TEST_1'</span>, <span class="st">'TEST_2'</span>, <span class="st">'TEST_2'</span>, <span class="st">'TEST_1'</span>, <span class="st">'TEST_2'</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">CRIT =</span> <span class="fu">c</span>(<span class="st">'LEVEL_2_1'</span>,<span class="st">'LEVEL_2_1'</span>, <span class="st">'LEVEL_2_2'</span>, <span class="cn">NA_character_</span>, <span class="st">'LEVEL_2_a'</span>, <span class="st">'LEVEL_2_1'</span>, <span class="cn">NA_character_</span>, <span class="st">'LEVEL_2_a'</span>, <span class="st">'LEVEL_2_b'</span>, <span class="cn">NA_character_</span>, <span class="st">'LEVEL_2_b'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class="table" style="font-size: 16px; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> SUBJID </th>
+   <th style="text-align:right;"> ASEQ </th>
+   <th style="text-align:left;"> GROUP </th>
+   <th style="text-align:left;"> PARAMCD </th>
+   <th style="text-align:left;"> CRIT </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> S1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> A </td>
+   <td style="text-align:left;"> TEST_1 </td>
+   <td style="text-align:left;"> LEVEL_2_1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S1 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> A </td>
+   <td style="text-align:left;"> TEST_1 </td>
+   <td style="text-align:left;"> LEVEL_2_1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S1 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> A </td>
+   <td style="text-align:left;"> TEST_1 </td>
+   <td style="text-align:left;"> LEVEL_2_2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S1 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:left;"> A </td>
+   <td style="text-align:left;"> TEST_1 </td>
+   <td style="text-align:left;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S1 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:left;"> A </td>
+   <td style="text-align:left;"> TEST_2 </td>
+   <td style="text-align:left;"> LEVEL_2_a </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S2 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> B </td>
+   <td style="text-align:left;"> TEST_1 </td>
+   <td style="text-align:left;"> LEVEL_2_1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S2 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> B </td>
+   <td style="text-align:left;"> TEST_1 </td>
+   <td style="text-align:left;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S2 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> B </td>
+   <td style="text-align:left;"> TEST_2 </td>
+   <td style="text-align:left;"> LEVEL_2_a </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S2 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:left;"> B </td>
+   <td style="text-align:left;"> TEST_2 </td>
+   <td style="text-align:left;"> LEVEL_2_b </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S3 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> A </td>
+   <td style="text-align:left;"> TEST_1 </td>
+   <td style="text-align:left;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S3 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> A </td>
+   <td style="text-align:left;"> TEST_2 </td>
+   <td style="text-align:left;"> LEVEL_2_b </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>Now, we need to take the <code>PARAMCD</code> as 1st level, and the <code>CRIT</code> as 2nd level to calculate the frequency of each <code>TEST</code>, it will be a table like PCSA.</p>
+</section>
+<section id="method-1" class="level1">
+<h1>Method 1</h1>
+<p>the <code>rtables::analyze()</code> will firstly be used in this case.</p>
+<p>To use this function, the data should be transformed from <code>long strcture(BDS)</code> to <code>wide</code>.</p>
+<p>Steps:</p>
+<ol type="1">
+<li>take action on setting up for the <code>missing value</code> and the <code>factor</code>:</li>
+</ol>
+<ul>
+<li>fill the missing value as <code>Missing_value_flag</code>, which will be subsequently handled in <code>rtables::analyze()</code></li>
+<li>use function <code>tidyr::pivot_wider</code> implement the transformation, the new columns are used as the analyzed variables <code>vars</code> of <code>rtables::analyze()</code></li>
+<li><code>factor</code> the values by given level values, the levels is the format of output</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="fu">across</span>(CRIT, <span class="sc">~</span><span class="fu">ifelse</span>(.<span class="sc">==</span><span class="st">""</span> <span class="sc">|</span> <span class="fu">is.na</span>(.), <span class="st">"Missing_value_flag"</span>, <span class="fu">as.character</span>(.))))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> <span class="fu">c</span>(<span class="st">"SUBJID"</span>, <span class="st">'ASEQ'</span>, <span class="st">'GROUP'</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">names_from =</span> <span class="st">"PARAMCD"</span>,<span class="at">values_from =</span> <span class="st">"CRIT"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#factor the data by mock</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>fmt <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">'TEST_1'</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'LEVEL_2_1'</span> <span class="ot">=</span> <span class="st">'1 of level 2'</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>               <span class="st">'LEVEL_2_2'</span> <span class="ot">=</span> <span class="st">'2 of level 2'</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>               <span class="st">'LEVEL_2_3'</span> <span class="ot">=</span> <span class="st">'3 of level 2'</span>),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"TEST_2"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'LEVEL_2_a'</span> <span class="ot">=</span> <span class="st">'a of level 2'</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>              <span class="st">'LEVEL_2_b'</span> <span class="ot">=</span> <span class="st">'b of level 2'</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>              <span class="st">'LEVEL_2_c'</span> <span class="ot">=</span> <span class="st">'c of level 2'</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>fmt <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(fmt, <span class="sc">~</span><span class="fu">append</span>(., <span class="fu">c</span>(<span class="st">"Missing_value_flag"</span> <span class="ot">=</span> <span class="st">"Missing_value_flag"</span>)))</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> df1 <span class="sc">%&gt;%</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">paste0</span>(<span class="st">'TEST_'</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>), <span class="sc">~</span><span class="fu">factor</span>(fmt[[<span class="fu">cur_column</span>()]][.x],</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">levels =</span> <span class="fu">c</span>(fmt[[<span class="fu">cur_column</span>()]])), <span class="at">.names =</span> <span class="st">"{.col}_fmt"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class="table" style="font-size: 16px; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> SUBJID </th>
+   <th style="text-align:right;"> ASEQ </th>
+   <th style="text-align:left;"> GROUP </th>
+   <th style="text-align:left;"> TEST_1 </th>
+   <th style="text-align:left;"> TEST_2 </th>
+   <th style="text-align:left;"> TEST_1_fmt </th>
+   <th style="text-align:left;"> TEST_2_fmt </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> S1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> A </td>
+   <td style="text-align:left;"> LEVEL_2_1 </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> 1 of level 2 </td>
+   <td style="text-align:left;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S1 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> A </td>
+   <td style="text-align:left;"> LEVEL_2_1 </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> 1 of level 2 </td>
+   <td style="text-align:left;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S1 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> A </td>
+   <td style="text-align:left;"> LEVEL_2_2 </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> 2 of level 2 </td>
+   <td style="text-align:left;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S1 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:left;"> A </td>
+   <td style="text-align:left;"> Missing_value_flag </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> Missing_value_flag </td>
+   <td style="text-align:left;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S1 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:left;"> A </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> LEVEL_2_a </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> a of level 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S2 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> B </td>
+   <td style="text-align:left;"> LEVEL_2_1 </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> 1 of level 2 </td>
+   <td style="text-align:left;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S2 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> B </td>
+   <td style="text-align:left;"> Missing_value_flag </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> Missing_value_flag </td>
+   <td style="text-align:left;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S2 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> B </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> LEVEL_2_a </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> a of level 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S2 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:left;"> B </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> LEVEL_2_b </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> b of level 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S3 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> A </td>
+   <td style="text-align:left;"> Missing_value_flag </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> Missing_value_flag </td>
+   <td style="text-align:left;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S3 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> A </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> LEVEL_2_b </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> b of level 2 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<ol start="2" type="1">
+<li>The dataframe <code>df1</code> is ready for output. now, the <code>layout</code> and <code>key values</code> of table will be built in the <code>rtables::analyze()</code>.</li>
+</ol>
+<ul>
+<li>the header and overall column are generated by <code>split_cols_by</code> and <code>add_overall_col</code></li>
+<li>in the <code>rtables::analyze()</code>:
+<ul>
+<li><code>vars</code> and <code>var_labels</code> are the variable names and labels</li>
+<li>in the <code>afun</code>, we create an analysis function, in which the arguments <code>df</code>, <code>.N_col</code>, <code>.var</code>, <code>.N_row</code> are created by rtables itself. the other aruments are customized will be passed by <code>extral_args</code>
+<ul>
+<li>the <code>df</code> is current available(<code>non NA</code>) data with splited group, that’s why we firstly fill the missing data <code>Missing_value_flag</code>. By filling a non-NA value, we can handle the missing value as users expected.</li>
+<li>you will see the customized arguments <code>missing_rm</code> and <code>missing_label</code>, if user hope hide or remove the missing values.</li>
+<li>the <code>n_unique_keys</code> and <code>N_unique_keys</code> indicate that when counting the number of n/N, which records should be used.</li>
+<li><code>add_Number</code> means whether add an row <code>Number: N</code></li>
+<li>All the values of these customized arguments are passed by the <code>extra_args</code>, it’s the greatest way to add the flexiabiliy for the tabulation.</li>
+</ul></li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">"GROUP"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overall_col</span>(<span class="st">"All"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  rtables<span class="sc">::</span><span class="fu">analyze</span>(<span class="at">vars =</span> <span class="fu">c</span>(<span class="st">'TEST_1_fmt'</span>, <span class="st">'TEST_2_fmt'</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">var_labels =</span> <span class="fu">c</span>(<span class="st">'This is test 1'</span>, <span class="st">'This is test 2'</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">afun =</span> <span class="cf">function</span>(df, .N_col, .var, .N_row,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">format =</span> <span class="st">'n(%)'</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">decimal =</span> <span class="dv">1</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">n_unique_keys =</span> <span class="cn">NULL</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">N_unique_keys =</span> <span class="cn">NULL</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">show_N_item =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">add_Number =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">missing_rm =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">missing_label =</span><span class="cn">NULL</span>,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                                  ...) {</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span>(missing_rm){</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>                      df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span>(<span class="sc">!!</span><span class="fu">as.name</span>(.var) <span class="sc">%in%</span> <span class="st">"Missing_value_flag"</span>))</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>                    }</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>                    df_n <span class="ot">&lt;-</span> df</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(n_unique_keys)){</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>                      df_n <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(<span class="fu">across</span>(<span class="fu">c</span>(n_unique_keys, .var)), <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>                    }</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>                    x <span class="ot">&lt;-</span> df_n[[.var]]</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(N_unique_keys)){</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>                      cus_N_col <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(<span class="fu">across</span>(N_unique_keys)) <span class="sc">%&gt;%</span> <span class="fu">nrow</span>()</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>                    }<span class="cf">else</span>{</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>                      cus_N_col <span class="ot">&lt;-</span> .N_col</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>                    }</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>                    lst_body <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">as.list</span>(<span class="fu">table</span>(x)),</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>                      <span class="cf">function</span>(xi) {</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">rcell</span>(<span class="fu">format_values_helper</span>(xi, cus_N_col, <span class="at">type =</span> format),</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>                              <span class="at">format =</span> <span class="fu">sprintf_format_helper</span>(xi, cus_N_col, <span class="dv">1</span>, <span class="at">type =</span> format),</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>                              <span class="at">indent_mod =</span> 1L</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>                        )</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>                      }</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>                    )</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span>(<span class="fu">is.null</span>(missing_label)){</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>                      <span class="cf">if</span>(<span class="st">"Missing_value_flag"</span> <span class="sc">%in%</span> <span class="fu">names</span>(lst_body)){</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>                        lst_body <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">list_modify</span>(lst_body, <span class="st">"Missing_value_flag"</span> <span class="ot">=</span> <span class="cn">NULL</span>)</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>                      }</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>                    }<span class="cf">else</span>{</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>                      lst_body <span class="ot">&lt;-</span> lst_body <span class="sc">%&gt;%</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">setNames</span>(<span class="fu">gsub</span>(<span class="st">"Missing_value_flag"</span>, missing_label, <span class="fu">names</span>(.)))</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>                    }</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span>(add_Number){</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>                      lst_body <span class="ot">&lt;-</span> <span class="fu">append</span>(<span class="fu">setNames</span>(<span class="fu">list</span>(<span class="fu">rcell</span>(cus_N_col,</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>                                                            <span class="at">format =</span> <span class="st">"xx"</span>,</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>                                                            <span class="at">indent_mod =</span> 1L)),</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>                                                  <span class="st">'Number'</span>), lst_body)</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>                    }</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">in_rows</span>(</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>                      <span class="at">.list =</span> <span class="fu">c</span>(</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>                        lst_body,</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>                        <span class="co"># add empty row, in .list obj</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>                        <span class="st">" "</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="st">""</span>, <span class="at">format =</span> <span class="st">"xx"</span>)</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>                      )</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>                    )</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>                  },</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>          <span class="at">extra_args =</span> <span class="fu">list</span>(<span class="at">format =</span> <span class="st">'n/N(%)'</span>,</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>                            <span class="at">n_unique_keys =</span> <span class="fu">c</span>(<span class="st">"SUBJID"</span>),</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>                            <span class="at">N_unique_keys =</span> <span class="fu">c</span>(<span class="st">"SUBJID"</span>),</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>                            <span class="at">add_Number =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>                            <span class="at">missing_rm =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>                            <span class="at">missing_label =</span> <span class="cn">NULL</span>)</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>          <span class="co"># ,</span></span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>          <span class="co"># show_labels = "hidden"</span></span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="1">
+<li>finally, fit the <code>layout</code> and <code>df1</code> into the <code>rtables::build_table</code></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>col_counts_df <span class="ot">&lt;-</span> df1 <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(SUBJID, GROUP)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>col_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(col_counts_df<span class="sc">$</span>GROUP)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>col_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(col_counts, <span class="fu">sum</span>(col_counts))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> lyt <span class="sc">%&gt;%</span> rtables<span class="sc">::</span><span class="fu">build_table</span>(df1, <span class="at">col_counts =</span> col_counts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output-display">
+
+<div class="tabwid"><style>.cl-067c2266{table-layout:auto;}.cl-0673bdce{font-family:'Verdana';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-0673bde2{font-family:'courier';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-06774aac{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-06774ab6{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-06774ab7{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:0;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-06774ac0{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:20pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-06774ac1{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:10pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-06776532{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-0677653c{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-0677653d{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-06776546{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-06776547{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-06776548{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-06776550{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-06776551{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-06776552{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-06776553{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-0677655a{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-0677655b{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-06776564{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-06776565{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-06776566{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-0677656e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-0677656f{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-06776570{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-06776578{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-06776579{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-0677657a{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-0677657b{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-06776582{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-06776583{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}
+  .tabwid {overflow-x: scroll; display: block;}
+  .tabwid table td p {min-width: 170px !important;}
+  .tabwid table td:first-child > p {min-width: 200px !important;}
+  .tabwid table tr:hover {background-color: #ffff99 !important;}
+  </style><table data-quarto-disable-processing="true" class="cl-067c2266"><thead><tr style="overflow-wrap:break-word;"><th class="cl-06776532"><p class="cl-06774aac"><span class="cl-0673bdce"></span></p></th><th class="cl-0677653c"><p class="cl-06774ab6"><span class="cl-0673bdce">A</span></p></th><th class="cl-0677653d"><p class="cl-06774ab6"><span class="cl-0673bdce">B</span></p></th><th class="cl-0677653c"><p class="cl-06774ab6"><span class="cl-0673bdce">All</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-06776546"><p class="cl-06774aac"><span class="cl-0673bdce"></span></p></th><th class="cl-06776547"><p class="cl-06774ab6"><span class="cl-0673bdce">(N=2)</span></p></th><th class="cl-06776548"><p class="cl-06774ab6"><span class="cl-0673bdce">(N=1)</span></p></th><th class="cl-06776547"><p class="cl-06774ab6"><span class="cl-0673bdce">(N=3)</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-06776550"><p class="cl-06774ab7"><span class="cl-0673bde2">This is test 1</span></p></td><td class="cl-06776551"><p class="cl-06774ab6"><span class="cl-0673bde2"></span></p></td><td class="cl-06776552"><p class="cl-06774ab6"><span class="cl-0673bde2"></span></p></td><td class="cl-06776551"><p class="cl-06774ab6"><span class="cl-0673bde2"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-06776553"><p class="cl-06774ac0"><span class="cl-0673bde2">    1 of level 2</span></p></td><td class="cl-0677655a"><p class="cl-06774ab6"><span class="cl-0673bde2">1/2 (50.0)</span></p></td><td class="cl-0677655b"><p class="cl-06774ab6"><span class="cl-0673bde2">1/1 (100)</span></p></td><td class="cl-0677655a"><p class="cl-06774ab6"><span class="cl-0673bde2">2/3 (66.7)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-06776553"><p class="cl-06774ac0"><span class="cl-0673bde2">    2 of level 2</span></p></td><td class="cl-0677655a"><p class="cl-06774ab6"><span class="cl-0673bde2">1/2 (50.0)</span></p></td><td class="cl-0677655b"><p class="cl-06774ab6"><span class="cl-0673bde2">0/1</span></p></td><td class="cl-0677655a"><p class="cl-06774ab6"><span class="cl-0673bde2">1/3 (33.3)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-06776564"><p class="cl-06774ac0"><span class="cl-0673bde2">    3 of level 2</span></p></td><td class="cl-06776565"><p class="cl-06774ab6"><span class="cl-0673bde2">0/2</span></p></td><td class="cl-06776566"><p class="cl-06774ab6"><span class="cl-0673bde2">0/1</span></p></td><td class="cl-06776565"><p class="cl-06774ab6"><span class="cl-0673bde2">0/3</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-0677656e"><p class="cl-06774ac1"><span class="cl-0673bde2">  Missing_value_flag</span></p></td><td class="cl-0677656f"><p class="cl-06774ab6"><span class="cl-0673bde2"></span></p></td><td class="cl-06776570"><p class="cl-06774ab6"><span class="cl-0673bde2"></span></p></td><td class="cl-0677656f"><p class="cl-06774ab6"><span class="cl-0673bde2"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-06776578"><p class="cl-06774ac1"><span class="cl-0673bde2">   </span></p></td><td class="cl-06776579"><p class="cl-06774ab6"><span class="cl-0673bde2"></span></p></td><td class="cl-0677657a"><p class="cl-06774ab6"><span class="cl-0673bde2"></span></p></td><td class="cl-06776579"><p class="cl-06774ab6"><span class="cl-0673bde2"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-06776550"><p class="cl-06774ab7"><span class="cl-0673bde2">This is test 2</span></p></td><td class="cl-06776551"><p class="cl-06774ab6"><span class="cl-0673bde2"></span></p></td><td class="cl-06776552"><p class="cl-06774ab6"><span class="cl-0673bde2"></span></p></td><td class="cl-06776551"><p class="cl-06774ab6"><span class="cl-0673bde2"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-06776553"><p class="cl-06774ac0"><span class="cl-0673bde2">    a of level 2</span></p></td><td class="cl-0677655a"><p class="cl-06774ab6"><span class="cl-0673bde2">1/2 (50.0)</span></p></td><td class="cl-0677655b"><p class="cl-06774ab6"><span class="cl-0673bde2">1/1 (100)</span></p></td><td class="cl-0677655a"><p class="cl-06774ab6"><span class="cl-0673bde2">2/3 (66.7)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-06776553"><p class="cl-06774ac0"><span class="cl-0673bde2">    b of level 2</span></p></td><td class="cl-0677655a"><p class="cl-06774ab6"><span class="cl-0673bde2">1/2 (50.0)</span></p></td><td class="cl-0677655b"><p class="cl-06774ab6"><span class="cl-0673bde2">1/1 (100)</span></p></td><td class="cl-0677655a"><p class="cl-06774ab6"><span class="cl-0673bde2">2/3 (66.7)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-06776564"><p class="cl-06774ac0"><span class="cl-0673bde2">    c of level 2</span></p></td><td class="cl-06776565"><p class="cl-06774ab6"><span class="cl-0673bde2">0/2</span></p></td><td class="cl-06776566"><p class="cl-06774ab6"><span class="cl-0673bde2">0/1</span></p></td><td class="cl-06776565"><p class="cl-06774ab6"><span class="cl-0673bde2">0/3</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-0677656e"><p class="cl-06774ac1"><span class="cl-0673bde2">  Missing_value_flag</span></p></td><td class="cl-0677656f"><p class="cl-06774ab6"><span class="cl-0673bde2"></span></p></td><td class="cl-06776570"><p class="cl-06774ab6"><span class="cl-0673bde2"></span></p></td><td class="cl-0677656f"><p class="cl-06774ab6"><span class="cl-0673bde2"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-0677657b"><p class="cl-06774ac1"><span class="cl-0673bde2">   </span></p></td><td class="cl-06776582"><p class="cl-06774ab6"><span class="cl-0673bde2"></span></p></td><td class="cl-06776583"><p class="cl-06774ab6"><span class="cl-0673bde2"></span></p></td><td class="cl-06776582"><p class="cl-06774ab6"><span class="cl-0673bde2"></span></p></td></tr></tbody></table></div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

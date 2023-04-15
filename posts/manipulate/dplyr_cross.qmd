@@ -1,0 +1,166 @@
+---
+title: 'Derive multiple columns based on across'
+date: '2023-04-08'
+author: Qing Zou
+categories: ['R', 'dplyr', 'across']
+description: 'When we want to add new columns and have to iterate...'
+execute:
+  message: false
+  warning: false
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r rcell0}
+library(dplyr)
+```
+
+## Reale Case
+
+Suppose we this data with columns `num_var1_1`, `num_var1_99` and `denom1_1`, `denom1_99`
+
+```{r rcell15}
+#| echo: true
+#| eval: true
+test_data <- data.frame(num_var1_1 = c(1, 4),
+                        num_var1_99 = c(2, 6),
+                        denom1_1 = c(2, 5),
+                        denom1_99 = c(3, 1))
+```
+
+what we want to do is to add two new columns: the new column equal to the sum of `num_var_x` and `denom1_y`.
+Just fit the data into the function `sum`
+
+```{r rcell116}
+#| echo: true
+#| eval: true
+
+sum_c <- function(x, y){
+  ifelse(y > 2, x+y+10, x+y)
+}
+
+test_data1 <- test_data %>%
+             mutate(var1_1 = sum_c(num_var1_1, denom1_1),
+                    var1_99 = sum_c(num_var1_99, denom1_99))
+```
+
+```{r rcell11612 }
+#| echo: false
+#| eval: true
+#| message: FALSE
+knitr::kable(test_data1, "html")%>%
+  kableExtra::kable_styling(font_size = 16)
+```
+
+the code seems not readable.
+
+
+
+## dplyr::across()
+
+we can use the across() to easily apply the functions to the selected columns.
+
+
+__Description__
+
+`across()` makes it easy to apply the same transformation to multiple columns, allowing you to use `select()` semantics inside in "data-masking" functions like `summarise()` and `mutate()`. See `vignette("colwise")` for more details.
+
+__Usage__
+
+```{r rcell13}
+#| echo: true
+#| eval: false
+across(.cols = everything(), .fns = NULL, ..., .names = NULL)
+```
+
+__Arguments__
+
+  |
+ -|:--
+ __.cols__| `<tidy-select>` Columns to transform. You can't select grouping columns because they are already automatically handled by the verb (i.e. `summarise()` or `mutate()`).
+ __.fns__| Functions to apply to each of the selected columns. Possible values are:
+
+- A function, e.g. `mean`.
+
+- A purrr-style lambda, e.g. `~ mean(.x, na.rm = TRUE)`
+
+- A list of functions/lambdas, e.g. `list(mean = mean, n_miss = ~ sum(is.na(.x))`
+
+- `NULL`: the default value, returns the selected columns in a data frame without applying a transformation. This is useful for when you want to use a function that takes a data frame.
+
+Within these functions you can use `cur_column()` and `cur_group()` to access the current column and grouping keys respectively.
+ __.names__|  A glue specification that describes how to name the output columns. This can use `{.col}` to stand for the selected column name, and `{.fn}` to stand for the name of the function being applied. The default `NULL` is equivalent to `{.col}` for the single function case and `{.col}_{.fn}` for the case where a list is used for .fns.
+
+### Method 1
+
+To use the `across` in this case:
+
+
+```{r rcell2}
+#| echo: true
+#| eval: false
+test_data %>%
+  mutate(across(.cols = starts_with('num_var1'),
+                .fns = ~sum_c(., get(gsub('num_var1', "denom1", cur_column()))),
+                .names = "{gsub('num_var1', 'var1', .col)}"))
+```
+```{r rcell11612sd }
+#| echo: false
+#| eval: true
+#| message: FALSE
+test_data %>%
+  mutate(across(.cols = starts_with('num_var1'),
+                .fns = ~sum_c(., get(gsub('num_var1', "denom1", cur_column()))),
+                .names = "{gsub('num_var1', 'var1', .col)}")) %>%
+knitr::kable("html")%>%
+  kableExtra::kable_styling(font_size = 16)
+```
+
+
+Steps:
+
+1. select referenced columns by `starts_with('num_var1')`
+2. apply the function `sum_c`. here, the first argument `x` is from the `.cols`, the second argument `y` is retrived by using the function
+`cur_column()`.
+3. give the names to new columns
+
+### Method 2
+
+this code will be used for a function that can do the vectorized calculation. it's faster that the method 1.
+
+```{r rcell21}
+#| echo: true
+#| eval: false
+test_data %>%
+  mutate(Vectorize(sum_c)(across(starts_with('num_var1'),
+                                 .names = "{gsub('num_var1', 'var1', .col)}"),
+                          across(starts_with('denom1')))) %>%
+  do.call(data.frame, .) %>%
+  rename_at(dplyr::vars(starts_with("Vectorize")), ~ gsub("Vectorize.sum_c.......", "", .))
+```
+```{r rcell116112sd }
+#| echo: false
+#| eval: true
+#| message: FALSE
+test_data %>%
+  mutate(Vectorize(sum_c)(across(starts_with('num_var1'),
+                                 .names = "{gsub('num_var1', 'var1', .col)}"),
+                          across(starts_with('denom1')))) %>%
+  do.call(data.frame, .) %>%
+  rename_at(dplyr::vars(starts_with("Vectorize")), ~ gsub("Vectorize.sum_c.......", "", .)) %>%
+knitr::kable("html")%>%
+  kableExtra::kable_styling(font_size = 16)
+```
+
+Steps:
+
+1. in the `mutate`, the function firstly is vectorized since we need a vector result returned.
+2. the function `sum_c` take the first `across()` as argument `x`, the name of new columns is set in here. the second `across()`
+select the needed columns as argument `y`.
+3. both passed value `x`, `y`  actually are two `dataframe`. e.g. the first one is `test_data %>% select(starts_with('num_var1'))`, the second one is `test_data %>% select(starts_with('denom1'))`. to accept the `dataframe` value, the  `sum_c` need to be a vectorized function.
+4. the `mutate` return a `matrix` as the new column, which can be transformed by `data.frame`(`as.data.frame` not work)
+
+
+
+

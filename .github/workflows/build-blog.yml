@@ -52,7 +52,7 @@ jobs:
       - name: Add permission management
         working-directory: ./_site
         run: |
-            source("R/control.R")
+            source("../R/control.R")
         shell: Rscript {0}
           
       - name: Write manifest

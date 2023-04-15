@@ -1,5 +1,5 @@
 ---
-title: "Biomarker One Day"
+title: "One Day"
 listing:
   contents: posts
   sort: "date desc"
@@ -15,5 +15,8 @@ title-block-banner: false
 # Series
 
 ##### [rtables-series](rtables-series.html)
-This series contains a great deal of tips, tricks and packages 
-that you can use to level up your rtables game.
+This series contains a great deal of tips, tricks and packages
+that you can use to level up your `rtables` game.
+
+##### [manipulate-series](manipulate-series.html)
+This series contains a great deal of tips, tricks of `dplyr`

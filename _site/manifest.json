@@ -12,46 +12,46 @@
   "packages": null,
   "files": {
     "archive.html": {
-      "checksum": "cb7273931797624927516cad75b9274e"
+      "checksum": "5cefcb84ed11cecc5b12798419d200dc"
     },
     "blog.html": {
-      "checksum": "aabf55fd6a555ffea3d20ae8bea1bf1c"
+      "checksum": "126dd904f787fafe044f1e427f7ccdad"
     },
     "index.html": {
-      "checksum": "5f8ea4d5dd2d53709f69bef40195e157"
+      "checksum": "96dcf3f965587aca2bf4ddd33ed1e1fe"
     },
     "listings.json": {
       "checksum": "51b95cbb6b1b23c673c63286fbd1d5b2"
     },
     "manipulate-series.html": {
-      "checksum": "12fbfb84a96021191b56ecc9c56d9d0a"
+      "checksum": "7be2acc6503a803565be403e8b4447b3"
     },
     "posts/manipulate/dplyr_cross.html": {
-      "checksum": "d72abf975e0fc8e513ac1ac342beb9b7"
+      "checksum": "31a46b9d8507c68d85ca8a1eedfa7bf0"
     },
     "posts/rtables/customize_cell.html": {
-      "checksum": "0f5983b35153c09ce53554bcca85d627"
+      "checksum": "3518cda450a1d61ca102a64c455ed342"
     },
     "posts/rtables/multiple_levels_calculation_1.html": {
-      "checksum": "d4548366a6e92b0b946002abcb29bec9"
+      "checksum": "3cfcbe33bbbf1311309b54d998ff359c"
     },
     "posts/rtables/multiple_levels_calculation_2.html": {
-      "checksum": "6311fa59b66bea1169bb3f213604fce2"
+      "checksum": "4d924f75774ee4380d831334dec417bc"
     },
     "posts/rtables/multiple_levels_calculation_3.html": {
-      "checksum": "e11f1406267c28fc8865ac83298161e4"
+      "checksum": "492d88b77ee9b68f77275ea307dd5166"
     },
     "posts/rtables/multiple_levels_calculation_4.html": {
-      "checksum": "104694cdd6ffea669929ff37e940c579"
+      "checksum": "f0bd50e8e94a8375dc05e33921e9328a"
     },
     "profile.png": {
       "checksum": "edefb3a5c40f6ba85e3acca0c44a1757"
     },
     "rtables-series.html": {
-      "checksum": "a93588b9885ebf84f250424453e6973d"
+      "checksum": "7ce81107f564233a4d924b82467059cf"
     },
     "search.json": {
-      "checksum": "df7f7c8c2d5dfd38f7c4ef4c2dd57efc"
+      "checksum": "7cb6424346e70ebd8e6a182ee4f03b62"
     },
     "site_libs/bootstrap/bootstrap-icons.css": {
       "checksum": "3104c106b6c22560ae274d7c56f116c5"

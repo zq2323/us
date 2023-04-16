@@ -173,7 +173,7 @@ another way of handling the formula is evaluate the fomula string directly inste
 
 
 ```{r}
-#| echo: false
+#| echo: true
 #| eval: true
 #| message: FALSE
 cond <- c(
@@ -189,6 +189,6 @@ knitr::kable(df2, "html")%>%
   kableExtra::kable_styling(font_size = 16)
 ```
 
-but I think it is neither robust enough on the perspective of data processing, not the functional programming in R.
+but I think it is neither robust enough on the perspective of data processing, nor the functional programming in R.
 it is also easily lead to the risk of data leak in the process,  some records may can't be identified by this way.
 

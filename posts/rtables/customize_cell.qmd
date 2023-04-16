@@ -32,7 +32,6 @@ rcell(
 x,
 format = NULL,
 colspan = 1L,
-rcell 103
 label = NULL,
 indent_mod = NULL,
 footnotes = NULL,

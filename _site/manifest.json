@@ -12,49 +12,49 @@
   "packages": null,
   "files": {
     "archive.html": {
-      "checksum": "dff8bc73f71a27a280988646a8e774ec"
+      "checksum": "00ce8872233a0ee65a4149f297ce56f2"
     },
     "blog.html": {
-      "checksum": "2b69919368649ffb4f60083d481dd384"
+      "checksum": "ba097a924d618824f218b2a3dee6abf3"
     },
     "data/sdtm/readme.html": {
       "checksum": "1d13f644af27bea084a871e8c5bf29e7"
     },
     "index.html": {
-      "checksum": "39298c914a0131e014b6f5ee43facab8"
+      "checksum": "d7261ed73ad041c2b385daba245a4500"
     },
     "listings.json": {
       "checksum": "51b95cbb6b1b23c673c63286fbd1d5b2"
     },
     "manipulate-series.html": {
-      "checksum": "0ad709fa0b2128cfaa722c63984fc880"
+      "checksum": "c3f194b1dda907ef55f88571e6c5d1bd"
     },
     "posts/manipulate/dplyr_cross.html": {
-      "checksum": "0a51175789574a3d4e4f7b3eaf95e709"
+      "checksum": "ca4b0757d89c9d32f39016da75cd4b27"
     },
     "posts/rtables/customize_cell.html": {
-      "checksum": "c2e3c48fe39f015a4cb5065e37773b42"
+      "checksum": "1b33bad90553a3040eed07adb29032fa"
     },
     "posts/rtables/multiple_levels_calculation_1.html": {
-      "checksum": "3038446081b3d02128f0145a923750ac"
+      "checksum": "99d3c358ad3f722e6ec84383a6f62c13"
     },
     "posts/rtables/multiple_levels_calculation_2.html": {
-      "checksum": "7c2b02f22ef8f87f2e99c9c62849f19b"
+      "checksum": "ac10320afca48a80ce05c34d55c82c9c"
     },
     "posts/rtables/multiple_levels_calculation_3.html": {
-      "checksum": "404786554fc89ef158a2d1515c840d12"
+      "checksum": "f27787083180a08cd07b5997b37e7226"
     },
     "posts/rtables/multiple_levels_calculation_4.html": {
-      "checksum": "38ea3a89f8ffd1511ee1990f8cf8c5de"
+      "checksum": "7928f25d88733f5c8d2c6d6a272ee6de"
     },
     "profile.png": {
       "checksum": "edefb3a5c40f6ba85e3acca0c44a1757"
     },
     "rtables-series.html": {
-      "checksum": "82e9589cac4419a371feaee664806001"
+      "checksum": "a87ee1b7237e8b1635a668759faa1687"
     },
     "search.json": {
-      "checksum": "f459fc8de90b1a85c15479165d6d5c07"
+      "checksum": "fea59c4dbf596e0007beeab3dfae0e78"
     },
     "site_libs/bootstrap/bootstrap-icons.css": {
       "checksum": "3104c106b6c22560ae274d7c56f116c5"

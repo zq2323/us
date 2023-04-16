@@ -52,7 +52,18 @@ jobs:
       - name: Add permission management
         working-directory: ./_site
         run: |
-            source("../R/control.R")
+            pagecryptr::pagecryptr("index.html", ${{ secrets.SINGLE_DOCS_PASSWD }}, out_file = "index.html")
+            contents <- paste(readLines("index.html"), collapse = "\n")
+            writeLines(gsub(${{ secrets.CONTENT_EXCLUDE }}, "", contents), "index.html")
+            for (i in list.dirs('posts')[-1]) {
+               posts <- list.files(i)
+               for (j in posts) {
+               file <- file.path(i, j)
+               pagecryptr::pagecryptr(file, ${{ secrets.SINGLE_DOCS_PASSWD }}, out_file = file)
+               contents <- paste(readLines(file), collapse = "\n")
+               writeLines(gsub(${{ secrets.CONTENT_EXCLUDE }}, "", contents), file)
+                                }
+            }
         shell: Rscript {0}
           
       - name: Write manifest

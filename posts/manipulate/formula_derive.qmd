@@ -19,7 +19,7 @@ library(glue)
 
 ## Real Case
 
-It is the most common in the data manipulation that deriving a column based on a given formula, such as `Toxicity Grade variables`, and `PCSA variables`.
+It is the most common case in the data manipulation that deriving a column based on a given formula, such as `Toxicity Grade variables`, and `PCSA variables`.
 
 ```{r rcell15}
 #| echo: true
@@ -46,8 +46,8 @@ knitr::kable(df, "html")%>%
   kableExtra::kable_styling(font_size = 16)
 ```
 
-we used the `ifelse` or `case_when` to implemente.In real case, the massive new variables and conditions lead to a not easy life!
-here, we can develop functions for functional programmer purpose to handle this kind of task.
+we used the `ifelse` or `case_when` to implement the new variables.In real case, the massive new variables and conditions lead to a not easy life!
+here, we can develop functions for functional programming purpose to handle this kind of task.
 
 ## Method 1
 

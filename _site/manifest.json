@@ -12,52 +12,52 @@
   "packages": null,
   "files": {
     "archive.html": {
-      "checksum": "3a9938c67cb25ec3e7fd76660bfb0a25"
+      "checksum": "d6ce788c6469fc7df866464101854dc0"
     },
     "blog.html": {
-      "checksum": "8acabecacefddb23ddc908b49f3191cd"
+      "checksum": "f4b6b7b0435863abbe3eb4ede7e9fc49"
     },
     "data/sdtm/readme.html": {
       "checksum": "1d13f644af27bea084a871e8c5bf29e7"
     },
     "index.html": {
-      "checksum": "176404af784cbfae1f2eb84b6cd6f6c2"
+      "checksum": "a2905ee70677b6657780b2b922477051"
     },
     "listings.json": {
       "checksum": "adbda92176f716e8f5104b33c2530bc8"
     },
     "manipulate-series.html": {
-      "checksum": "d4ef9d3fb70f6e0f5e333f264b454d5e"
+      "checksum": "8db788a2261da6d9d0636f189872bbba"
     },
     "posts/manipulate/dplyr_cross.html": {
-      "checksum": "c7111d35e7f5d40d3eac0151d3b14355"
+      "checksum": "a8f1b17b6f19c35eef098ea17463b595"
     },
     "posts/manipulate/formula_derive.html": {
-      "checksum": "af4d0aae87d5bddb717965968454569d"
+      "checksum": "f330524e0764404bfbb302b3d8653726"
     },
     "posts/rtables/customize_cell.html": {
-      "checksum": "834218c9cf73cd59b06867152b1f7e1d"
+      "checksum": "0eb978c68925431b1baabad2516775b6"
     },
     "posts/rtables/multiple_levels_calculation_1.html": {
-      "checksum": "b39dcd150058259989b46509917d4fd4"
+      "checksum": "0466112a477d21578e4536ca7dab6889"
     },
     "posts/rtables/multiple_levels_calculation_2.html": {
-      "checksum": "c8b8a3a60c378d8d72464497107b06ed"
+      "checksum": "27777bfc3b17688c3700364ab9ad7a83"
     },
     "posts/rtables/multiple_levels_calculation_3.html": {
-      "checksum": "ec2dc117842a46f4cf2951e7116f9f6e"
+      "checksum": "92fcbbbb234930f02181d8017595eeac"
     },
     "posts/rtables/multiple_levels_calculation_4.html": {
-      "checksum": "4188b47929fbafa1661ffec30d30e69c"
+      "checksum": "c5e853bc670d95da7e8155ddfd0c5954"
     },
     "profile.png": {
       "checksum": "edefb3a5c40f6ba85e3acca0c44a1757"
     },
     "rtables-series.html": {
-      "checksum": "1bbc1fddbc0ec791e96c7e4b1c6a811b"
+      "checksum": "99e8e41ccc8cfcbb73c8f9faa8546839"
     },
     "search.json": {
-      "checksum": "0042ee660dc942cbf307c1edb5ab397a"
+      "checksum": "7679b6cd19ebdfbde4bbdd9e2394b5bb"
     },
     "site_libs/bootstrap/bootstrap-icons.css": {
       "checksum": "3104c106b6c22560ae274d7c56f116c5"

@@ -1,0 +1,26 @@
+{
+  "AGEGR1": {
+    "<65": ["<65"],
+    "65-80": ["65-80"],
+    ">80": [">80"]
+  },
+    "AGEGR1N": {
+    "1": ["<65"],
+    "2": ["65-80"],
+    "3": [">80"]
+  },
+  "SEX": {
+    "M": ["Male"],
+    "F": ["Female"]
+  },
+  "RACE": {
+    "WHITE": ["White"],
+    "BLACK OR AFRICAN AMERICAN": ["Black Or African American"],
+    "AMERICAN INDIAN OR ALASKA NATIVE": ["American Indian Or Alaska Native"]
+  },
+  "BMIBLGR1": {
+    "<25": ["<25"],
+    "25-<30": ["25-<30"],
+    ">=30": [">=30"]
+  }
+}

@@ -1,0 +1,230 @@
+---
+title: 'Draft TLF generator'
+date: '2023-04-19'
+author: Qing Zou
+categories: ['R', 'R6class']
+description: 'Draft'
+execute:
+  message: false
+  warning: false
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r rcell0}
+library(checkmate)
+library(R6)
+library(assertive)
+library(dplyr)
+library(rlang)
+library(Hmisc)
+library(data.table)
+box::use(R/utils)
+```
+
+## AdsModel
+
+Create a `AdsModel` to manage the datasets level process
+
+```{r rcell15}
+#| echo: true
+#| eval: true
+#' @title AdsModel Class
+#'
+#'
+#' @description
+#' This is the  base class for ADaM dataset, to manage the CDISC attributes on dataset level
+#'
+#' AdsModel are build around the three following key parts:
+#'
+#' * Methods
+#'
+#'
+#' For now, only implement that adding the attribute Model label by default. see `add_model_name()`
+#'
+#' test <- AdsModel$new()
+#' test$initialize(adsl, adpsl)
+#'
+#' names(test$dataset)
+#' a <- test$dataset
+#'
+#' tmp <- test$get_dataset('adsl')
+#' attributes(tmp)
+#'
+#' adsl2 <- adsl
+#' test$add_dataset(adsl2)
+#' names(test$dataset)
+#'
+#' ```
+#'
+
+
+AdsModel <- R6::R6Class(
+  "AdsModel",
+  public = list(
+    lib = NA,
+    initialize = function(...){
+      df_lst <-  tibble::lst(...)
+      if(is.character(check_list(df_lst, min.len = 1))){
+        # message("No datasets passed")
+      }else{
+        df_lst <- purrr::map2(df_lst, names(df_lst), ~utils$add_model_name(.x, .y))
+        private$.dataset <- private$.dataset |> append(df_lst)
+      }
+
+    },
+    get_dataset = function(domain){
+      if(missing(domain)){
+        return(private$.dataset)
+      }else{
+        checkmate::check_character(domain,
+                                   min.chars = 1L,
+                                   any.missing = FALSE)
+        if(length(domain) == 1){
+          return(purrr::keep_at(private$.dataset, domain)[[1]])
+        }else{
+          return(purrr::keep_at(private$.dataset, domain))
+        }
+
+      }
+    },
+    add_dataset = function(...){
+        df_lst <-  tibble::lst(...)
+        if(is.character(check_list(df_lst, min.len = 1))){
+          message("No datasets passed")
+        }else{
+          df_lst <- purrr::map2(df_lst, names(df_lst), ~utils$add_model_name(.x, .y))
+          private$.dataset <- private$.dataset |> append(df_lst)
+        }
+
+      },
+    remove_dataset = function(...){
+      # to be developed
+    }
+  ),
+  active = list(
+    dataset = function(){
+        return(private$.dataset)
+    }
+  ),
+  private = list(
+    .dataset = list()
+  )
+)
+```
+
+```{r}
+#| echo: true
+#| eval: true
+# test <- AdsModel$new(adsl)
+adsl <- haven::read_xpt('../../data/adam/adsl.xpt')
+test <- AdsModel$new()
+
+test$initialize(adsl)
+
+names(test$dataset)
+```
+
+```{r}
+#| echo: true
+#| eval: true
+
+
+tmp <- test$get_dataset('adsl')
+attributes(tmp)
+```
+
+```{r}
+#| echo: true
+#| eval: true
+
+adtte <- haven::read_xpt('../../data/adam/adtte.xpt')
+test$add_dataset(adtte)
+names(test$dataset)
+tmp2 <- test$get_dataset('adtte')
+attributes(tmp2)
+```
+
+## VariableProc
+
+Create a `VariableProc` to manage the variable level process
+
+```{r rcell116}
+#| echo: true
+#| eval: true
+
+VariableProc <- R6::R6Class(
+  "VariableProc",
+  inherit = AdsModel,
+  public = list(
+    # datasets level dictionary, can be retrieved by dataset
+    # variables level dictionary, can be retrieved by dataset$variable
+    dictionary = list(),
+    initialize = function(dictionary_path = NA){
+
+      #check dictionary_path is string
+      if(!is.na(dictionary_path)){
+        utils$check_dictionary_path(dictionary_path, "dictionary_path")
+        dictionary <-  jsonlite::fromJSON(dictionary_path)
+        self$dictionary <- dictionary
+      }
+
+    },
+    get_decode = function(){
+      if(is.character(check_list(self$dictionary, min.len = 1))){
+        message("No dictionary avaiable, the variables will not be decoded")
+      }else{
+        private$.dataset <- purrr::map(private$.dataset, ~utils$set_attr(df = ., dictionary = self$dictionary))
+      }
+
+    },
+    update_decode = function(dataset = NA, dictionary = ""){
+      #check if the dataset exist first
+      #check the format of dictionary
+
+      # to be developed
+    },
+    update_detail = function(){
+      # element track which dataset and variable be decoded, is it necessary integrated to S3 'summary'?
+
+      # to be developed
+    }
+  ),
+
+  #set dataset private, except variable attribute, user can't modify dataset in this module
+  private = list(
+    .dataset = list()
+  )
+)
+```
+
+```{r rcell11612 }
+#| echo: true
+#| eval: true
+test2 <- VariableProc$new()
+
+test2$initialize(dictionary_path = "dictionary.json")
+
+test2$add_dataset(adsl)
+adsl_tmp <- test2$get_dataset('adsl')
+
+attributes(adsl_tmp)
+
+attributes(adsl_tmp$SEX)$format
+
+
+```
+
+```{r}
+test2$get_decode()
+
+adsl_tmp2 <- test2$get_dataset('adsl')
+attributes(adsl_tmp)
+attributes(adsl_tmp2$SEX)$format
+
+attributes(adsl_tmp2$AGEGR1)$format
+```
+
+
+

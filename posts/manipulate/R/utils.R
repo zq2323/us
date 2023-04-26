@@ -57,3 +57,23 @@ add_model_name <- function(df, name){
 }
 
 
+#######TLF----------------
+
+parse_mtdata <- function(metadata){
+
+    # check the structure of metadata
+
+    #------------------------------#
+    #------------------------------#
+
+
+    #check the results
+
+    return(list(variables = names(metadata$columns),
+                string_variable = names(purrr::keep(metadata$columns, ~.x$type == "string")),
+                domains = purrr::map_vec(metadata$columns, ~purrr::pluck(.x, 'domain'))  |>  unique(),
+                header_variable = purrr::pluck(metadata, "header")$variable,
+                header_order = purrr::pluck(metadata, "header")$order,
+                population_variable = purrr::pluck(metadata, "population")$variable)
+    )
+}

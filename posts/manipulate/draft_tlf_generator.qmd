@@ -2,7 +2,7 @@
 title: 'Draft TLF generator'
 date: '2023-04-25'
 author: Qing Zou
-categories: ['R', 'R6class']
+categories: ['R', 'R6class', 'TLF']
 description: 'Draft the TLF generator tool'
 execute:
   message: false
@@ -44,85 +44,88 @@ Create a `AdsModel` to manage the datasets level process
 #' * Methods
 #'
 #'
-#' For now, only implement that adding the attribute Model label by default. see `add_model_name()`
-#'
-#' test <- AdsModel$new()
-#' test$initialize(adsl, adpsl)
-#'
-#' names(test$dataset)
-#' a <- test$dataset
-#'
-#' tmp <- test$get_dataset('adsl')
-#' attributes(tmp)
-#'
-#' adsl2 <- adsl
-#' test$add_dataset(adsl2)
-#' names(test$dataset)
-#'
-#' ```
-#'
 
 
 AdsModel <- R6::R6Class(
-  "AdsModel",
-  public = list(
-    lib = NA,
-    initialize = function(...){
-      df_lst <-  tibble::lst(...)
-      if(is.character(check_list(df_lst, min.len = 1))){
-        # message("No datasets passed")
-      }else{
-        df_lst <- purrr::map2(df_lst, names(df_lst), ~utils$add_model_name(.x, .y))
-        private$.dataset <- private$.dataset |> append(df_lst)
-      }
+    "AdsModel",
+    public = list(
+        initialize = function(...){
+            df_lst <-  tibble::lst(...)
+            if(is.character(check_list(df_lst, min.len = 1))){
+                # message("No datasets passed")
+            }else{
+                df_lst <- purrr::map2(df_lst, names(df_lst), ~utils$add_model_name(.x, .y))
+                private$.dataset <- private$.dataset |> append(df_lst)
+            }
 
-    },
-    get_dataset = function(domain){
-      if(missing(domain)){
-        return(private$.dataset)
-      }else{
-        checkmate::check_character(domain,
-                                   min.chars = 1L,
-                                   any.missing = FALSE)
-        if(length(domain) == 1){
-          return(purrr::keep_at(private$.dataset, domain)[[1]])
-        }else{
-          return(purrr::keep_at(private$.dataset, domain))
+        },
+        #' retrieve datasets from AdsModel by names
+        get_dataset = function(domain){
+            if(missing(domain)){
+                return(private$.dataset)
+            }else{
+                checkmate::check_character(domain,
+                                           min.chars = 1L,
+                                           any.missing = FALSE)
+                if(length(domain) == 1){
+                    return(purrr::keep_at(private$.dataset, domain)[[1]])
+                }else{
+                    return(purrr::keep_at(private$.dataset, domain))
+                }
+
+            }
+        },
+        add_dataset = function(...){
+            df_lst <-  tibble::lst(...)
+            if(is.character(check_list(df_lst, min.len = 1))){
+                message("No datasets passed")
+            }else{
+                df_lst <- purrr::map2(df_lst, names(df_lst), ~utils$add_model_name(.x, .y))
+                private$.dataset <- private$.dataset |> append(df_lst)
+            }
+
+        },
+        #' load dataset from disk
+        #'
+        #' @param path the database directory
+        #' @param domain the dataset names
+        load_dataset = function(path = NULL, domains){
+
+            df_lst <- lapply(domains, \(domain) haven::read_xpt(file.path(path, paste0(domain, ".xpt"))))
+            names(df_lst) <- domains
+            private$.dataset <- private$.dataset |> append(df_lst)
+        },
+        remove_dataset = function(...){
+            # to be developed
         }
-
-      }
-    },
-    add_dataset = function(...){
-        df_lst <-  tibble::lst(...)
-        if(is.character(check_list(df_lst, min.len = 1))){
-          message("No datasets passed")
-        }else{
-          df_lst <- purrr::map2(df_lst, names(df_lst), ~utils$add_model_name(.x, .y))
-          private$.dataset <- private$.dataset |> append(df_lst)
+    ),
+    active = list(
+        dataset = function(){
+            return(private$.dataset)
         }
-
-      },
-    load_dataset = function(path = NULL, domains){
-
-      df_lst <- lapply(domains, \(domain) haven::read_xpt(file.path(path, paste0(domain, ".xpt"))))
-      names(df_lst) <- domains
-      private$.dataset <- private$.dataset |> append(df_lst)
-    },
-    remove_dataset = function(...){
-      # to be developed
-    }
-  ),
-  active = list(
-    dataset = function(){
-        return(private$.dataset)
-    }
-  ),
-  private = list(
-    .dataset = list()
-  )
+    ),
+    private = list(
+        .dataset = list()
+    )
 )
 ```
 
+#### Used functions
+
+<details><summary  class = "block2"> <font color="blue"> add_model_name </font> __(click)__ </summary>
+```{r}
+#| echo: true
+#| eval: false
+#' add a Model name attribute to data.frame
+add_model_name <- function(df, name){
+    attr(df, 'Model') <-toupper(name)
+    return(df)
+}
+```
+</details>
+
+
+#### Steps
 ```{r}
 #| echo: true
 #| eval: true
@@ -132,6 +135,7 @@ test <- AdsModel$new()
 
 test$initialize(adsl)
 
+# retrieve data by 'dataset'
 names(test$dataset)
 ```
 
@@ -141,7 +145,8 @@ names(test$dataset)
 
 
 tmp <- test$get_dataset('adsl')
-attributes(tmp)
+#the updated attribute 'Model'
+attributes(tmp)$Model
 ```
 
 ```{r}
@@ -149,10 +154,12 @@ attributes(tmp)
 #| eval: true
 
 adtte <- haven::read_xpt('../../data/adam/adtte.xpt')
+
+# add dataset to instance
 test$add_dataset(adtte)
 names(test$dataset)
 tmp2 <- test$get_dataset('adtte')
-attributes(tmp2)
+attributes(tmp2)$Model
 ```
 
 ## VariableProc
@@ -167,8 +174,7 @@ VariableProc <- R6::R6Class(
   "VariableProc",
   inherit = AdsModel,
   public = list(
-    # datasets level dictionary, can be retrieved by dataset
-    # variables level dictionary, can be retrieved by dataset$variable
+    # save the dictionary
     dictionary = list(),
     initialize = function(dictionary_path = NA){
 
@@ -208,6 +214,40 @@ VariableProc <- R6::R6Class(
 )
 ```
 
+- the `VariableProc` inherit from `AdsModel`
+- method `get_decode` set attributes format to variables
+
+#### Used functions
+
+<details><summary  class = "block2"> <font color="blue"> set_attr </font> __(click)__ </summary>
+```{r}
+#| echo: true
+#| eval: false
+#' add "format" attributes to the variables of passed datasets
+#'
+#' @param df
+#' @param dictionary
+#' @param .vars the variables used to be assisgned the attributes
+set_attr <- function(df, dictionary, .vars){
+
+    sub_dict <- purrr::keep_at(dictionary, colnames(df))
+
+    for (var in names(sub_dict)) {
+        var_N <- ifelse(paste0(var, 'N') %in% colnames(df), paste0(var, 'N'), 'NA')
+        attr(df[[var]], "format") <- list("Value" =  names(sub_dict[[var]]),
+                                          "Decode" = purrr::map_vec(sub_dict[[var]], 1),
+                                          "Numeric variable" = var_N,
+                                          "Ordinal" = names(sub_dict[[var_N]]))
+    }
+
+    return(df)
+}
+
+```
+</details>
+
+#### Steps
+
 ```{r rcell11612 }
 #| echo: true
 #| eval: true
@@ -218,18 +258,23 @@ test2$initialize(dictionary_path = "dictionary.json")
 test2$add_dataset(adsl)
 adsl_tmp <- test2$get_dataset('adsl')
 
-attributes(adsl_tmp)
+# inherit the AdsModel method
+attributes(adsl_tmp)$Model
 
+# before setting the format
 attributes(adsl_tmp$SEX)$format
 
 
 ```
 
 ```{r}
+
+# set the format by get_decode()
 test2$get_decode()
 
 adsl_tmp2 <- test2$get_dataset('adsl')
-attributes(adsl_tmp)
+
+# the format is set from dictionary.json
 attributes(adsl_tmp2$SEX)$format
 
 attributes(adsl_tmp2$AGEGR1)$format
@@ -244,15 +289,21 @@ Create a `TLFProc` to generate the outputs
 TLFProc <- R6::R6Class(
   "TLFProc",
   public = list(
+
+    #' Stores the object of the outputs
     tlfs = NULL,
+
+    #' Store the metadata
     tlfmetadata = NULL,
+
+    #' create a new environment for TLFProc
     initialize = function(config = NULL) {
       self$tlfs = new.env(parent = emptyenv())
-
       if(!is.null(config)){
         self$add_tlfmetadata(config)
       }
     },
+    #' return avaialable outputs name
     has_outputs = function(pattern = NULL) {
       outputs = ls(self$tlfs, all.names = TRUE)
       if (!is.null(pattern)) {
@@ -261,12 +312,16 @@ TLFProc <- R6::R6Class(
       }
       outputs
     },
+
+    #' get output by name
     get = function(output, ...) {
       assert_string(output, min.chars = 1L)
       # return output
       obj = get0(output, envir = self$tlfs, inherits = FALSE, ifnotfound = NULL)
       return(obj)
     },
+
+    #' get a list of outputs
     mget = function(outputs, ...) {
       assert_character(outputs, min.chars = 1L, any.missing = FALSE)
       # return
@@ -282,6 +337,9 @@ TLFProc <- R6::R6Class(
       #
     },
 
+    #' Generate the TLFs
+    #' @param VariableProc the instance VariableProc with decoded dataset
+    #' @param tlmetadata  the passed metadata
     generator = function(VariableProc, tlfmetadata = self$tlfmetadata){
 
       #check VariableProc
@@ -317,8 +375,93 @@ TLFProc <- R6::R6Class(
   )
 )
 ```
+#### Used functions
 
-initialize a new instance of `TLFProc`, add tlfmetadata `mock.yaml`
+<details><summary  class = "block2"> <font color="blue"> parse_mtdata </font> __(click)__ </summary>
+```{r}
+#| echo: true
+#| eval: false
+parse_mtdata <- function(metadata){
+
+    # check the structure of metadata
+
+    #------------------------------#
+    #------------------------------#
+
+
+    #check the results
+
+    return(list(variables = names(metadata$columns),
+                string_variable = names(purrr::keep(metadata$columns, ~.x$type == "string")),
+                domains = purrr::map_vec(metadata$columns, ~purrr::pluck(.x, 'domain'))  |>  unique(),
+                header_variable = purrr::pluck(metadata, "header")$variable,
+                header_order = purrr::pluck(metadata, "header")$order,
+                population_variable = purrr::pluck(metadata, "population")$variable)
+    )
+}
+```
+</details>
+
+<details><summary  class = "block2"> <font color="blue"> demo_t_generator </font> __(click)__ </summary>
+```{r}
+#| echo: true
+#| eval: false
+
+demo_t_generator <- function(dataset, columns, columns_label, string_variable, header_variable, header_order, population_variable){
+
+
+    names(header_variable) <- NULL
+
+    adsl <- dataset %>%
+        select(USUBJID, all_of(population_variable), all_of(header_variable), all_of(header_order), all_of(columns)) %>%
+        filter(!!as.name(population_variable) == "Y")
+    # %>%
+    #   mutate(across(string_variable, ~ifelse(.=="", "Missing_value_impute", as.character(.))))
+
+    adsl_fact <- adsl %>%
+        mutate(across(all_of(string_variable),
+                      ~factor(attributes(cur_data()[[cur_column()]])$format$Decode[.x],
+                              levels = attributes(cur_data()[[cur_column()]])$format$Decode)))
+
+    if(isTRUE(is.na(header_order))){
+        adsl_fact <- adsl_fact %>%
+            mutate(across(all_of(header_variable),
+                          ~factor(attributes(cur_data()[[cur_column()]])$format$Decode[.x],
+                                  levels = attributes(cur_data()[[cur_column()]])$format$Decode)))
+    }else{
+        adsl_fact <- df_order_header(adsl_fact, c(header_variable, header_order))
+    }
+
+
+
+    col_counts <- table(adsl[[header_variable]]) %>% as.vector()
+    col_counts <- c(col_counts, sum(col_counts))
+
+    calculated_t <- basic_table() %>%
+        split_cols_by(header_variable) %>%
+        add_overall_col("All") %>%
+        summarize_vars(
+            vars = columns,
+            var_labels = columns_label,
+            dispfmt = c("npct"),
+            decimal = 1,
+            denom = c("col"),
+            unique_row = TRUE
+        ) %>%
+        rtables::build_table(adsl_fact, col_counts = col_counts)
+
+    return(calculated_t)
+}
+
+
+
+```
+</details>
+
+
+
+#### Steps
+- initialize a new instance of `TLFProc`, add tlfmetadata `mock.yaml`
 ```{r}
 tlfp <- TLFProc$new()
 
@@ -326,7 +469,7 @@ tlfp$add_tlfmetadata("mock.yaml")
 ```
 
 
-<details><summary  class = "block2"> <font color="blue"> mock.yaml </font> __(click)__ </summary>
+<details><summary  class = "block2"> <font color="blue"> demo_t_generator </font> __(click)__ </summary>
 
 ```{r}
 #| echo: true
@@ -543,7 +686,7 @@ tlfp$get("demographic_example2")
 table_to_html(tlfp$get("demographic_example2"), to_html = FALSE)
 ```
 &nbsp;
-  
+
 - the size of tlfp
 ```{r}
 print(object.size(tlfp))

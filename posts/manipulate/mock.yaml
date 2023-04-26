@@ -1,0 +1,50 @@
+demographic_example1:
+  columns:
+    AGEGR1:
+      domain: adsl
+      type: string
+      label: Age Goup (n[%])
+    AGE:
+      domain: adsl
+      type: numberic
+      label: Age
+      stats: N Mean Median Q1 Q3 Min Max
+    SEX:
+      domain: adsl
+      type: string
+      label: Sex (n[%])
+  header:
+    variable:
+      TRT01A
+    order:
+      TRT01AN
+  population:
+    variable:
+      SAFFL
+demographic_example2:
+  columns:
+    RACE:
+      domain: adsl
+      type: string
+      label: Race (n[%])
+    AGEGR1N:
+      domain: adsl
+      type: string
+      label: Age Goup (n[%])
+    BMIBL:
+      domain: adsl
+      type: numberic
+      label: Baseline BMI (kg/m^2)
+      stats: N Mean Median Q1 Q3 Min Max
+    BMIBLGR1:
+      domain: adsl
+      type: string
+      label: Baseline BMI Agroup
+  header:
+    variable:
+      SEX
+    order:
+      NULL
+  population:
+    variable:
+      DISCONFL

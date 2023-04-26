@@ -1,9 +1,9 @@
 ---
 title: 'Draft TLF generator'
-date: '2023-04-19'
+date: '2023-04-25'
 author: Qing Zou
 categories: ['R', 'R6class']
-description: 'Draft'
+description: 'Draft the TLF generator tool'
 execute:
   message: false
   warning: false
@@ -20,7 +20,10 @@ library(dplyr)
 library(rlang)
 library(Hmisc)
 library(data.table)
+library(rtables)
 box::use(R/utils)
+source("R/rtables_fct.R")
+source("R/tlf_pgm.R")
 ```
 
 ## AdsModel
@@ -99,6 +102,12 @@ AdsModel <- R6::R6Class(
         }
 
       },
+    load_dataset = function(path = NULL, domains){
+
+      df_lst <- lapply(domains, \(domain) haven::read_xpt(file.path(path, paste0(domain, ".xpt"))))
+      names(df_lst) <- domains
+      private$.dataset <- private$.dataset |> append(df_lst)
+    },
     remove_dataset = function(...){
       # to be developed
     }
@@ -226,5 +235,357 @@ attributes(adsl_tmp2$SEX)$format
 attributes(adsl_tmp2$AGEGR1)$format
 ```
 
+### TLFProc
 
 
+Create a `TLFProc` to generate the outputs
+
+```{r}
+TLFProc <- R6::R6Class(
+  "TLFProc",
+  public = list(
+    tlfs = NULL,
+    tlfmetadata = NULL,
+    initialize = function(config = NULL) {
+      self$tlfs = new.env(parent = emptyenv())
+
+      if(!is.null(config)){
+        self$add_tlfmetadata(config)
+      }
+    },
+    has_outputs = function(pattern = NULL) {
+      outputs = ls(self$tlfs, all.names = TRUE)
+      if (!is.null(pattern)) {
+        assert_string(pattern)
+        outputs = outputs[grepl(pattern, outputs)]
+      }
+      outputs
+    },
+    get = function(output, ...) {
+      assert_string(output, min.chars = 1L)
+      # return output
+      obj = get0(output, envir = self$tlfs, inherits = FALSE, ifnotfound = NULL)
+      return(obj)
+    },
+    mget = function(outputs, ...) {
+      assert_character(outputs, min.chars = 1L, any.missing = FALSE)
+      # return
+      set_names(lapply(outputs, self$get, ...), outputs)
+    },
+    # read yaml configuration
+    add_tlfmetadata = function(config) {
+      assert_string(config, min.chars = 1L)
+      assert(check_file_exists(config))
+
+      metadata <- yaml::read_yaml(config)
+      self$tlfmetadata <- purrr::map(metadata, utils$parse_mtdata)
+      #
+    },
+
+    generator = function(VariableProc, tlfmetadata = self$tlfmetadata){
+
+      #check VariableProc
+      #check tlfmetadata
+
+      domains <- purrr::map(tlfmetadata, ~purrr::pluck(.x, "domains"))  |>
+        purrr::list_simplify()  |>
+        unique()
+
+      # dynamically construct a standard tlf template function with the metadata?
+      # args_list <- list()
+      purrr::walk2(tlfmetadata,
+                   names(tlfmetadata),
+                   ~assign(x = .y,
+                           value = do.call("demo_t_generator",
+                                           list(dataset = VariableProc$get_dataset(domains),
+                                                columns = .x$variables,
+                                                columns_label = .x$variables,
+                                                string_variable  = .x$string_variable,
+                                                header_variable = .x$header_variable,
+                                                header_order = .x$header_order,
+                                                population_variable = .x$population_variable)),
+                           envir = self$tlfs),
+                   .progress = TRUE)
+
+      invisible(self)
+    },
+    remove = function(keys) {
+      i = wf(!self$has(keys))
+      rm(list = keys, envir = self$items)
+      invisible(self)
+    }
+  )
+)
+```
+
+initialize a new instance of `TLFProc`, add tlfmetadata `mock.yaml`
+```{r}
+tlfp <- TLFProc$new()
+
+tlfp$add_tlfmetadata("mock.yaml")
+```
+
+
+<details><summary  class = "block2"> <font color="blue"> mock.yaml </font> __(click)__ </summary>
+
+```{r}
+#| echo: true
+#| eval: false
+
+demographic_example1:
+  columns:
+    AGEGR1:
+      domain: adsl
+      type: string
+      label: Age Goup (n[%])
+    AGE:
+      domain: adsl
+      type: numberic
+      label: Age
+      stats: N Mean Median Q1 Q3 Min Max
+    SEX:
+      domain: adsl
+      type: string
+      label: Sex (n[%])
+  header:
+    variable:
+      TRT01A
+    order:
+      TRT01AN
+  population:
+    variable:
+      SAFFL
+demographic_example2:
+  columns:
+    RACE:
+      domain: adsl
+      type: string
+      label: Race (n[%])
+    AGEGR1N:
+      domain: adsl
+      type: string
+      label: Age Goup (n[%])
+    BMIBL:
+      domain: adsl
+      type: numberic
+      label: Baseline BMI (kg/m^2)
+      stats: N Mean Median Q1 Q3 Min Max
+    BMIBLGR1:
+      domain: adsl
+      type: string
+      label: Baseline BMI Agroup
+  header:
+    variable:
+      SEX
+    order:
+      NULL
+  population:
+    variable:
+      DISCONFL
+```
+</details>
+
+
+<details><summary class = "block2">
+```{r}
+#| echo: true
+#| eval: false
+tlfp$tlfmetadata
+```
+</summary>
+```{r}
+#| echo: false
+#| eval: true
+tlfp$tlfmetadata
+```
+
+</details>
+
+
+Get all the needed datasets from metadata
+```{r}
+domains <- purrr::map(tlfp$tlfmetadata, ~purrr::pluck(.x, "domains"))  |>
+        purrr::list_simplify()  |>
+        unique()
+```
+
+
+- initialize a new instance of `VaribaleProc` with the dictionary of variables `dictionary.json`,
+- load needed  datasets
+- add attribute `format` to variables by `get_decode()`
+
+```{r}
+varpoc <- VariableProc$new()
+
+varpoc$initialize(dictionary_path = "dictionary.json")
+
+varpoc$load_dataset(path = "../../data/adam", domains = domains)
+varpoc$get_decode()
+```
+
+<details><summary class = "block2"> <font color="blue"> dictionary.json </font> __(click)__ </summary>
+
+```{r}
+#| echo: true
+#| eval: false
+{
+  "AGEGR1": {
+    "<65": ["<65"],
+    "65-80": ["65-80"],
+    ">80": [">80"]
+  },
+    "AGEGR1N": {
+    "1": ["<65"],
+    "2": ["65-80"],
+    "3": [">80"]
+  },
+  "SEX": {
+    "M": ["Male"],
+    "F": ["Female"]
+  },
+  "RACE": {
+    "WHITE": ["White"],
+    "BLACK OR AFRICAN AMERICAN": ["Black Or African American"],
+    "AMERICAN INDIAN OR ALASKA NATIVE": ["American Indian Or Alaska Native"]
+  },
+  "BMIBLGR1": {
+    "<25": ["<25"],
+    "25-<30": ["25-<30"],
+    ">=30": [">=30"]
+  }
+}
+```
+</details>
+
+
+- Generate the outputs
+```{r}
+tlfp$generator(VariableProc = varpoc)
+```
+
+- Check what the outputs we have in `tlfp`
+```{r}
+tlfp$has_outputs()
+
+tlfp$has_outputs("1")
+```
+
+- the tlf metadata of the table `demographic_example1`
+```{r}
+tlfp$tlfmetadata$demographic_example1
+```
+
+```{r}
+#| echo: false
+#| eval: true
+
+#' Display rtables in html
+#'
+#' @param table a rtables object
+#' @param to_html export to HTML. Default TRUE
+#'
+#' @return a html table
+#' @export
+table_to_html <- function(table, to_html = TRUE) {
+  stopifnot(!is.null(table), class(table) %in% c("TableTree", "ElementaryTable"))
+  extra_css <- "
+  .tabwid {overflow-x: scroll; display: block;}
+  .tabwid table td p {min-width: 170px !important;}
+  .tabwid table td:first-child > p {min-width: 200px !important;}
+  .tabwid table tr:hover {background-color: #ffff99 !important;}
+  "
+  flextable::set_flextable_defaults(
+    font.family = ifelse(to_html, "Source Sans Pro", "Verdana"),
+    extra_css = extra_css
+  )
+  ft <- rtables::tt_to_flextable(table) %>%
+    flextable::border_remove() %>%
+    flextable::bold(bold = TRUE, part = "header") %>%
+    flextable::hline_top(part = "body") %>%
+    flextable::hline_bottom(part = "body") %>%
+    flextable::autofit()
+  if (to_html) {
+    flextable::htmltools_value(ft)
+  } else {
+    ft
+  }
+}
+```
+
+- Retrieve the outputs
+```{r}
+#| echo: true
+#| eval: false
+tlfp$get("demographic_example1")
+```
+```{r}
+#| echo: false
+#| eval: true
+#| message: FALSE
+table_to_html(tlfp$get("demographic_example1"), to_html = FALSE)
+```
+
+```{r}
+
+tlfp$tlfmetadata$demographic_example1
+
+```
+
+```{r}
+#| echo: true
+#| eval: false
+tlfp$get("demographic_example2")
+```
+```{r}
+#| echo: false
+#| eval: true
+#| message: FALSE
+table_to_html(tlfp$get("demographic_example2"), to_html = FALSE)
+```
+
+the size of tlfp
+```{r}
+print(object.size(tlfp))
+```
+
+Transform the class of `rtables`
+```{r}
+table_to_dataframe <- function(tbl) {
+
+  # check the tabl classs
+
+  matrix_tbl <- tbl %>% rtables::matrix_form()
+
+  tbl_strings <- as.data.frame(matrix_tbl$strings)
+
+
+  ## get the hader index from tbl attributes
+  nrow_header <- attributes(matrix_tbl)$nrow_header
+
+  ## get the body of tbl
+  tbl_body <- tbl_strings[-c(1:nrow_header), ]
+
+  ## get the header of tbl
+  tbl_header <- tbl_strings[c(1:nrow_header), ]
+
+  attr(tbl_body, "tbl_header") <- tbl_header
+
+
+
+  return(tbl_body)
+}
+```
+
+```{r}
+tbl <-  tlfp$get("demographic_example2") |> table_to_dataframe()
+```
+```{r du2 }
+#| echo: false
+#| eval: true
+#| message: FALSE
+knitr::kable(tbl, "html")%>%
+  kableExtra::kable_styling(font_size = 16)
+```
+```{r}
+attributes(tbl)
+```

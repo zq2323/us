@@ -12,55 +12,55 @@
   "packages": null,
   "files": {
     "archive.html": {
-      "checksum": "2b39c0d17ce7c7664b4484768d193c35"
+      "checksum": "5eb713ff5a642ed37f9fd3f2ef47e6f3"
     },
     "blog.html": {
-      "checksum": "7311cbe94969583b8074331eb3c7d6c7"
+      "checksum": "89324f08dfbc34299b09e4792f6a09ae"
     },
     "data/sdtm/readme.html": {
       "checksum": "57566b7c6563e00aefc0b3f049c43ac9"
     },
     "index.html": {
-      "checksum": "fee57bb1f7b5bbb9535c7e675b217330"
+      "checksum": "0fada9bb4adb3dd5359596813236f4ff"
     },
     "listings.json": {
       "checksum": "ed66760bf1c849797a39e0f4dd6d16f5"
     },
     "manipulate-series.html": {
-      "checksum": "b419cee69091d0ce717c86ec6c618576"
+      "checksum": "9273f7c147899004e004c3407d9bd9c8"
     },
     "posts/manipulate/dplyr_cross.html": {
-      "checksum": "a00e9b6baaaaeb4d3e21277b9c367ac4"
+      "checksum": "7bc83f5533524b1483882233940f701f"
     },
     "posts/manipulate/draft_tlf_generator.html": {
-      "checksum": "39299a0b0e87b695972ea3fc99c658c7"
+      "checksum": "b78f6999956ddf300a1569e9d1270b42"
     },
     "posts/manipulate/formula_derive.html": {
-      "checksum": "4262a0d074deff585686bd6006209193"
+      "checksum": "9edb0403a091dd8d2538d7e39f1412c2"
     },
     "posts/rtables/customize_cell.html": {
-      "checksum": "2ecc99513966998e4f7abe2c7015d8f7"
+      "checksum": "903a61a32693b1f5a0c67b316a379ff1"
     },
     "posts/rtables/multiple_levels_calculation_1.html": {
-      "checksum": "94c25c4cf315d6674725266e96695f15"
+      "checksum": "f259b9bd326fc1c165d93443bb1d5534"
     },
     "posts/rtables/multiple_levels_calculation_2.html": {
-      "checksum": "4af2d92f2238c05b205f53e81fb3afbe"
+      "checksum": "c80381107b713015f5e2c5969396f5ac"
     },
     "posts/rtables/multiple_levels_calculation_3.html": {
-      "checksum": "116f27b8466de47b4cf3a07e89a8cc50"
+      "checksum": "7053a110b6f29148f55b84e771f2f89f"
     },
     "posts/rtables/multiple_levels_calculation_4.html": {
-      "checksum": "38975dd6d9ba2eddfdf2bfafb8b25749"
+      "checksum": "70a339e2f7003e94424161636ac35eef"
     },
     "profile.png": {
       "checksum": "edefb3a5c40f6ba85e3acca0c44a1757"
     },
     "rtables-series.html": {
-      "checksum": "8050bf47a10941786ba12ed032e2a5e6"
+      "checksum": "63c27f94b784ab7b95bc945bf496b7b9"
     },
     "search.json": {
-      "checksum": "23db36dee1ef272845f4eb089db6cf39"
+      "checksum": "ab2fba7682a3b1780fd45e916958189a"
     },
     "site_libs/bootstrap/bootstrap-icons.css": {
       "checksum": "7368407d15110275bb7af49476ae70f2"
@@ -129,7 +129,7 @@
       "checksum": "fb56f94a8d449952c71f7403d7d97afe"
     },
     "styles.css": {
-      "checksum": "e31c3cdea03dfab8a29456978017bd10"
+      "checksum": "4d581ec171952ebc75f5d12168f4f2f9"
     }
   },
   "users": null

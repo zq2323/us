@@ -12,55 +12,55 @@
   "packages": null,
   "files": {
     "archive.html": {
-      "checksum": "8defbb3824b49bbd2b64a03faac43690"
+      "checksum": "2b39c0d17ce7c7664b4484768d193c35"
     },
     "blog.html": {
-      "checksum": "d14720052e07a75ccc8528ed7b5b5146"
+      "checksum": "7311cbe94969583b8074331eb3c7d6c7"
     },
     "data/sdtm/readme.html": {
-      "checksum": "5a181d9161f3bbf31d08c0ac126fbffe"
+      "checksum": "57566b7c6563e00aefc0b3f049c43ac9"
     },
     "index.html": {
-      "checksum": "5477add54d4ed9d4663b2c621f797625"
+      "checksum": "fee57bb1f7b5bbb9535c7e675b217330"
     },
     "listings.json": {
       "checksum": "ed66760bf1c849797a39e0f4dd6d16f5"
     },
     "manipulate-series.html": {
-      "checksum": "4fa4a83bb7f7bb87ae267e34b818aa6d"
+      "checksum": "b419cee69091d0ce717c86ec6c618576"
     },
     "posts/manipulate/dplyr_cross.html": {
-      "checksum": "84d9c4f8c648da7246cbb109d0990ce9"
+      "checksum": "a00e9b6baaaaeb4d3e21277b9c367ac4"
     },
     "posts/manipulate/draft_tlf_generator.html": {
-      "checksum": "9f6cb14c6333e74a900bf23d7908358d"
+      "checksum": "39299a0b0e87b695972ea3fc99c658c7"
     },
     "posts/manipulate/formula_derive.html": {
-      "checksum": "82cf97a050ccdd83df3aa5fa1743d888"
+      "checksum": "4262a0d074deff585686bd6006209193"
     },
     "posts/rtables/customize_cell.html": {
-      "checksum": "e178532669aee1db898f60edab5bbe46"
+      "checksum": "2ecc99513966998e4f7abe2c7015d8f7"
     },
     "posts/rtables/multiple_levels_calculation_1.html": {
-      "checksum": "49639129dfdba2a2f607f7d49a56aec1"
+      "checksum": "94c25c4cf315d6674725266e96695f15"
     },
     "posts/rtables/multiple_levels_calculation_2.html": {
-      "checksum": "48d9f42064ce5ce27eef48780faedb6d"
+      "checksum": "4af2d92f2238c05b205f53e81fb3afbe"
     },
     "posts/rtables/multiple_levels_calculation_3.html": {
-      "checksum": "38e4161f6abe8293b6e679ec17eb1343"
+      "checksum": "116f27b8466de47b4cf3a07e89a8cc50"
     },
     "posts/rtables/multiple_levels_calculation_4.html": {
-      "checksum": "63c11aae91dfff300eb8aaa421c92e83"
+      "checksum": "38975dd6d9ba2eddfdf2bfafb8b25749"
     },
     "profile.png": {
       "checksum": "edefb3a5c40f6ba85e3acca0c44a1757"
     },
     "rtables-series.html": {
-      "checksum": "cd587c60b90795ed8439c6dd3225a8f4"
+      "checksum": "8050bf47a10941786ba12ed032e2a5e6"
     },
     "search.json": {
-      "checksum": "aa4f1ce847474c514e684ea2773f6cc3"
+      "checksum": "23db36dee1ef272845f4eb089db6cf39"
     },
     "site_libs/bootstrap/bootstrap-icons.css": {
       "checksum": "7368407d15110275bb7af49476ae70f2"

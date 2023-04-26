@@ -2,6 +2,7 @@
   {
     "listing": "/archive.html",
     "items": [
+      "/posts/manipulate/draft_tlf_generator.html",
       "/posts/manipulate/formula_derive.html",
       "/posts/rtables/multiple_levels_calculation_4.html",
       "/posts/rtables/multiple_levels_calculation_3.html",
@@ -14,6 +15,7 @@
   {
     "listing": "/manipulate-series.html",
     "items": [
+      "/posts/manipulate/draft_tlf_generator.html",
       "/posts/manipulate/formula_derive.html",
       "/posts/manipulate/dplyr_cross.html"
     ]
@@ -31,6 +33,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/manipulate/draft_tlf_generator.html",
       "/posts/manipulate/formula_derive.html",
       "/posts/rtables/multiple_levels_calculation_4.html",
       "/posts/rtables/multiple_levels_calculation_3.html",

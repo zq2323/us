@@ -402,7 +402,7 @@ tlfp$tlfmetadata
 </details>
 
 
-Get all the needed datasets from metadata
+- Get all the needed datasets from metadata
 ```{r}
 domains <- purrr::map(tlfp$tlfmetadata, ~purrr::pluck(.x, "domains"))  |>
         purrr::list_simplify()  |>
@@ -542,13 +542,14 @@ tlfp$get("demographic_example2")
 #| message: FALSE
 table_to_html(tlfp$get("demographic_example2"), to_html = FALSE)
 ```
-
-the size of tlfp
+&nbsp;
+  
+- the size of tlfp
 ```{r}
 print(object.size(tlfp))
 ```
 
-Transform the class of `rtables`
+- Transform the class of `rtables`
 ```{r}
 table_to_dataframe <- function(tbl) {
 

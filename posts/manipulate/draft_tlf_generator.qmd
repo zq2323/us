@@ -11,7 +11,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-Please find the code of this section in <font color="blue"> [add_model_name](https://posit.cloud/content/5870060) </font>
+Please find the code of this section in <font color="blue"> https://posit.cloud/content/5870060 </font>
 
 ```{r rcell0}
 library(checkmate)

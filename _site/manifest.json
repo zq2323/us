@@ -12,55 +12,55 @@
   "packages": null,
   "files": {
     "archive.html": {
-      "checksum": "03d1ba241d53bccfb0df280cacbcd969"
+      "checksum": "65f67cad8c1189b3080b4ac3f0137ed2"
     },
     "blog.html": {
-      "checksum": "0b50a979b6136208e1b8486798d7ed24"
+      "checksum": "6d841da417a8a77e577c6da528bdd20a"
     },
     "data/sdtm/readme.html": {
       "checksum": "57566b7c6563e00aefc0b3f049c43ac9"
     },
     "index.html": {
-      "checksum": "32775e5b5cccc69dc1fd605e47580d79"
+      "checksum": "41d08fbdad5d4585969ba5ff6ffa94e1"
     },
     "listings.json": {
       "checksum": "d308cab81b130f2a9a5032a09a78d01f"
     },
     "manipulate-series.html": {
-      "checksum": "2e027270e828312b02596caff18d2ed2"
+      "checksum": "2fb69f822fd00f0ed510bd298b589f7a"
     },
     "posts/manipulate/dplyr_cross.html": {
-      "checksum": "d5946dbd6569de20aae1ddafd940aa53"
+      "checksum": "61505e123e816acd8c0a2d6317715be2"
     },
     "posts/manipulate/draft_tlf_generator.html": {
-      "checksum": "32ed71848b02377c44d91ff6902fb481"
+      "checksum": "dc881dd1ea34e93c93c78cfc58f0d456"
     },
     "posts/manipulate/formula_derive.html": {
-      "checksum": "696849153bcc5ba32d3caeea94b0e9be"
+      "checksum": "233bec193729988e0b057c0cb2f23ae1"
     },
     "posts/rtables/customize_cell.html": {
-      "checksum": "95517baf613ae850f6808c4a58eb7189"
+      "checksum": "8b1e0de29179ab7961b0a9ef378eeb9f"
     },
     "posts/rtables/multiple_levels_calculation_1.html": {
-      "checksum": "3f5a49fdd72024a5b1e6eb70f6e4fb19"
+      "checksum": "e8a369d5eea0df4dce3ef5a4b733dd1e"
     },
     "posts/rtables/multiple_levels_calculation_2.html": {
-      "checksum": "e28afe3cea2ba0261b30312c2934a957"
+      "checksum": "cbbc86fbaa6ece3a1e3f8cb80c826a9c"
     },
     "posts/rtables/multiple_levels_calculation_3.html": {
-      "checksum": "5019808f364fc7dc5ec119e2c7511571"
+      "checksum": "284f0ca1b98b9cd8388e89cd6aedb08f"
     },
     "posts/rtables/multiple_levels_calculation_4.html": {
-      "checksum": "c67898ef5157d4548fb92b4d1bde6a9b"
+      "checksum": "1aea8b6028c0ebba53d757f98961c8fb"
     },
     "profile.png": {
       "checksum": "edefb3a5c40f6ba85e3acca0c44a1757"
     },
     "rtables-series.html": {
-      "checksum": "58389e448f5cf6e658afd18363a5783c"
+      "checksum": "3efb26243af86c27d1851d992c7716de"
     },
     "search.json": {
-      "checksum": "f5d4193ee324242d46507fbf8acf735e"
+      "checksum": "56125b5880b82bab6dd385ddd9e056a0"
     },
     "site_libs/bootstrap/bootstrap-icons.css": {
       "checksum": "7368407d15110275bb7af49476ae70f2"

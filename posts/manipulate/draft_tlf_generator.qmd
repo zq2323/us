@@ -469,7 +469,7 @@ tlfp$add_tlfmetadata("mock.yaml")
 ```
 
 
-<details><summary  class = "block2"> <font color="blue"> demo_t_generator </font> __(click)__ </summary>
+<details><summary  class = "block2"> <font color="blue"> mock.yaml </font> __(click)__ </summary>
 
 ```{r}
 #| echo: true

@@ -21,16 +21,6 @@
     ]
   },
   {
-    "listing": "/rtables-series.html",
-    "items": [
-      "/posts/rtables/multiple_levels_calculation_4.html",
-      "/posts/rtables/multiple_levels_calculation_3.html",
-      "/posts/rtables/multiple_levels_calculation_2.html",
-      "/posts/rtables/multiple_levels_calculation_1.html",
-      "/posts/rtables/customize_cell.html"
-    ]
-  },
-  {
     "listing": "/blog.html",
     "items": [
       "/posts/manipulate/draft_tlf_generator.html",
@@ -39,6 +29,16 @@
       "/posts/rtables/multiple_levels_calculation_3.html",
       "/posts/rtables/multiple_levels_calculation_2.html",
       "/posts/manipulate/dplyr_cross.html",
+      "/posts/rtables/multiple_levels_calculation_1.html",
+      "/posts/rtables/customize_cell.html"
+    ]
+  },
+  {
+    "listing": "/rtables-series.html",
+    "items": [
+      "/posts/rtables/multiple_levels_calculation_4.html",
+      "/posts/rtables/multiple_levels_calculation_3.html",
+      "/posts/rtables/multiple_levels_calculation_2.html",
       "/posts/rtables/multiple_levels_calculation_1.html",
       "/posts/rtables/customize_cell.html"
     ]

@@ -370,6 +370,7 @@ TLFProc <- R6::R6Class(
     },
     remove = function(outputs) {
       #check the outputs if exsit firstly
+      #checkmate::wf(exsit(outputs, envir = self$tlfs))?
       rm(list = outputs, envir = self$tlfs)
       invisible(self)
     }

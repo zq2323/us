@@ -368,9 +368,9 @@ TLFProc <- R6::R6Class(
 
       invisible(self)
     },
-    remove = function(keys) {
-      i = wf(!self$has(keys))
-      rm(list = keys, envir = self$items)
+    remove = function(outputs) {
+      #check the outputs if exsit firstly
+      rm(list = outputs, envir = self$tlfs)
       invisible(self)
     }
   )

@@ -1,0 +1,13 @@
+---
+title: "Series: Report TLFs"
+listing:
+  contents: posts/report
+  sort: "date desc"
+  type: default
+  categories: false
+  sort-ui: false
+  filter-ui: false
+  fields: [date, title, reading-time, description]
+page-layout: full
+title-block-banner: true
+---

@@ -1,0 +1,119 @@
+---
+title: 'Create a QC validation report by package data.validator'
+date: '2023-05-12'
+author: Qing Zou
+categories: ['report', 'data.validator']
+description: 'way to automated validation'
+execute:
+  message: false
+  warning: false
+editor_options:
+  chunk_output_type: console
+---
+
+In the `TLFgenerator`, we get two demographic example 1 and 2.
+
+```{r lib}
+#| echo: false
+#| eval: true
+library(dplyr)
+```
+
+```{r read1}
+#| echo: true
+#| eval: true
+example1 <- readRDS('data/example1.rds')
+```
+
+```{r ex1}
+#| echo: false
+#| eval: true
+#| message: FALSE
+knitr::kable(example1, "html")%>%
+  kableExtra::kable_styling(font_size = 16)
+```
+
+```{r read2}
+#| echo: true
+#| eval: true
+example2 <- readRDS('data/example2.rds')
+```
+
+```{r}
+#| echo: false
+#| eval: true
+#| message: FALSE
+knitr::kable(example2, "html")%>%
+  kableExtra::kable_styling(font_size = 16)
+```
+
+to present the feature of data.validator, we change some value of the example output:
+
+```{r}
+#| echo: true
+#| eval: true
+example1_qc <- example1
+example1_qc[3,1] <- "Age Group [n %]"
+```
+
+```{r}
+#| echo: false
+#| eval: true
+#| message: FALSE
+knitr::kable(example1_qc, "html")%>%
+  kableExtra::kable_styling(font_size = 16)
+```
+
+```{r}
+#| echo: true
+#| eval: true
+example2_qc <- example2
+example2_qc[23, 1] <- "^{unicode} 30"
+example2_qc[18, 2] <- "15 ; 38"
+```
+
+```{r}
+#| echo: false
+#| eval: true
+#| message: FALSE
+knitr::kable(example2_qc, "html")%>%
+  kableExtra::kable_styling(font_size = 16)
+```
+
+```{r}
+#| echo: true
+#| eval: true
+#| message: FALSE
+
+library(assertr)
+library(data.validator)
+
+check_cols_value <- function(expected_value){
+  function(x) { x %in% expected_value}
+}
+
+report <- data_validation_report()
+
+validate(example1, name = "Verifying demographic_example1") %>%
+  validate_cols(check_cols_value(example1_qc$V1), V1, description = "Check the first column V1") %>% 
+  validate_cols(check_cols_value(example1_qc$V2), V2, description = "Check the first column V2") %>% 
+  validate_cols(check_cols_value(example1_qc$V3), V3, description = "Check the first column V3") %>% 
+  validate_cols(check_cols_value(example1_qc$V4), V4, description = "Check the first column V4") %>% 
+  add_results(report)
+
+validate(example2, name = "Verifying demographic_example2") %>%
+  validate_cols(check_cols_value(example2_qc$V1), V1, description = "Check the first column V1") %>% 
+  validate_cols(check_cols_value(example2_qc$V2), V2, description = "Check the first column V2") %>% 
+  validate_cols(check_cols_value(example2_qc$V3), V3, description = "Check the first column V3") %>% 
+  validate_cols(check_cols_value(example2_qc$V4), V4, description = "Check the first column V4") %>% 
+  add_results(report)
+
+
+```
+
+```{r}
+#| echo: true
+#| eval: false
+save_report(report, output_file = "Check_TLFs.html", output_dir = getwd())
+```
+<iframe src="Check_TLFs.html" height="100%" width="100%"></iframe>
